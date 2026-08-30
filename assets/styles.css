@@ -17,14 +17,15 @@ footer {
     display: none !important;
 }
 
-/* Keep header available because the CLOSED >> button lives here */
+/* Do NOT hide the entire header.
+   The sidebar reopen button lives here in newer Streamlit versions. */
 header[data-testid="stHeader"],
 header.stAppHeader {
     background: transparent !important;
     box-shadow: none !important;
 }
 
-/* Hide only unnecessary Streamlit controls */
+/* Hide only the unnecessary Streamlit controls */
 [data-testid="stDecoration"] {
     display: none !important;
 }
@@ -37,7 +38,7 @@ header.stAppHeader {
     display: none !important;
 }
 
-/* Keep CLOSED sidebar reopen control available */
+/* Keep the CLOSED sidebar control available. */
 [data-testid="collapsedControl"],
 [data-testid="stExpandSidebarButton"] {
     display: flex !important;
@@ -480,77 +481,34 @@ header.stAppHeader {
 /* ==========================================================
    CLOSED SIDEBAR >> BUTTON ONLY
 
-   IMPORTANT:
-   - CLOSED >> = always visible
-   - OPEN << = untouched, so Streamlit still shows it on hover
+   CLOSED:
+   - always visible
+   - navy background
+   - rounded corners
+   - white arrow
+
+   OPEN:
+   - completely untouched
+   - Streamlit keeps << hidden until hover
    ========================================================== */
 
-/* Closed-button element itself */
-button[data-testid="stExpandSidebarButton"],
-[data-testid="stExpandSidebarButton"] {
-    visibility: visible !important;
-    opacity: 1 !important;
-
+button[data-testid="stExpandSidebarButton"] {
     background-color: #1A1A2E !important;
-    color: #FFFFFF !important;
-
-    width: 42px !important;
-    height: 40px !important;
-    min-width: 42px !important;
-    min-height: 40px !important;
-
-    padding: 0 !important;
-
-    border: none !important;
     border-radius: 10px !important;
+    border: none !important;
     box-shadow: none !important;
-
-    align-items: center !important;
-    justify-content: center !important;
+    color: #FFFFFF !important;
 }
 
-/* If Streamlit puts a button inside the expand-control wrapper */
-[data-testid="stExpandSidebarButton"] button {
-    visibility: visible !important;
-    opacity: 1 !important;
-
-    background-color: #1A1A2E !important;
-    color: #FFFFFF !important;
-
-    width: 42px !important;
-    height: 40px !important;
-    min-width: 42px !important;
-    min-height: 40px !important;
-
-    padding: 0 !important;
-
-    border: none !important;
-    border-radius: 10px !important;
-    box-shadow: none !important;
-}
-
-/* Closed >> icon */
+/* Make the existing Streamlit >> icon white */
 button[data-testid="stExpandSidebarButton"] span,
-button[data-testid="stExpandSidebarButton"] svg,
-[data-testid="stExpandSidebarButton"] span,
-[data-testid="stExpandSidebarButton"] svg {
+button[data-testid="stExpandSidebarButton"] svg {
     color: #FFFFFF !important;
     fill: #FFFFFF !important;
     stroke: #FFFFFF !important;
-    opacity: 1 !important;
 }
 
-/* Closed >> hover */
-button[data-testid="stExpandSidebarButton"]:hover,
-[data-testid="stExpandSidebarButton"]:hover,
-[data-testid="stExpandSidebarButton"] button:hover {
+/* Hover feedback for the CLOSED button */
+button[data-testid="stExpandSidebarButton"]:hover {
     background-color: #2D2D4E !important;
-    border-radius: 10px !important;
-}
-
-/* Keyboard focus for CLOSED >> */
-button[data-testid="stExpandSidebarButton"]:focus-visible,
-[data-testid="stExpandSidebarButton"] button:focus-visible {
-    outline: 2px solid #90CAF9 !important;
-    outline-offset: 2px !important;
 }
