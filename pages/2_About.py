@@ -1,131 +1,272 @@
 import streamlit as st
+
 from utils.styles import apply_styles
+from utils.ui import render_footer
+
 
 st.set_page_config(
-    page_title="About · BeachGuard",
+    page_title="About AquaCast | BeachGuard",
     page_icon="🌊",
-    layout="wide"
+    layout="wide",
 )
 
 apply_styles()
 
+
 st.html(
     """
-<div class="bg-content">
+<div class="bg-reading">
 
-    <h1
-        style="
-            font-size:2rem;
-            font-weight:800;
-            letter-spacing:-0.02em;
-            margin:0 0 0.25rem 0;
-        "
-    >
-        About BeachGuard
-    </h1>
+    <div class="bg-page-heading">
 
-    <p
-        style="
-            color:#6B7280;
-            font-size:0.95rem;
-            margin:0 0 2.5rem 0;
-        "
-    >
-        How AquaCast works and what the risk levels mean
-    </p>
-
-    <div class="bg-about-section">
-        <h2>What AquaCast Predicts</h2>
+        <h1>
+            About AquaCast
+        </h1>
 
         <p>
-            AquaCast estimates the probability that bacterial levels at
-            Parkside Aquatic Park will exceed elevated-risk thresholds for
-            E. coli and Enterococcus.
+            How environmental information becomes
+            a BeachGuard water-quality risk forecast.
         </p>
 
-        <p>
-            It uses historical bacterial monitoring data combined with
-            environmental predictors to produce a risk forecast — not a
-            direct water measurement.
-        </p>
     </div>
 
-    <div class="bg-about-section">
-        <h2>How the Model Works</h2>
 
-        <p>
-            The models were developed using chronological training,
-            validation, and test periods rather than randomly mixing past
-            and future observations — a method designed to reflect
-            real-world forecasting conditions.
-        </p>
+    <h2 class="bg-reading-heading">
+        How AquaCast Works
+    </h2>
 
-        <p>
-            The pipeline evaluates multiple machine-learning configurations
-            and selects the best-performing model for each bacterium.
-            Model version and prediction date are shown on the Home page.
-        </p>
-    </div>
 
-    <div class="bg-about-section">
-        <h2>What the Risk Levels Mean</h2>
+    <div class="bg-workflow">
 
-        <div class="bg-risk-chip-row">
+        <div class="bg-workflow-card">
 
-            <div class="bg-risk-chip">
-                <div
-                    class="bg-risk-chip-dot"
-                    style="background:#2E7D32;"
-                ></div>
-
-                <div class="bg-risk-chip-text">
-                    <strong>Safe</strong>
-                    <span>
-                        Low likelihood of elevated bacterial risk based
-                        on current model estimates.
-                    </span>
-                </div>
+            <div class="bg-workflow-number">
+                1
             </div>
 
-            <div class="bg-risk-chip">
-                <div
-                    class="bg-risk-chip-dot"
-                    style="background:#F57F17;"
-                ></div>
+            <strong>
+                Environmental Data
+            </strong>
 
-                <div class="bg-risk-chip-text">
-                    <strong>Caution</strong>
-                    <span>
-                        Moderate or uncertain risk. Check official
-                        advisories before entering the water.
-                    </span>
-                </div>
-            </div>
-
-            <div class="bg-risk-chip">
-                <div
-                    class="bg-risk-chip-dot"
-                    style="background:#C62828;"
-                ></div>
-
-                <div class="bg-risk-chip-text">
-                    <strong>Unsafe</strong>
-                    <span>
-                        Elevated bacterial risk predicted. Avoid water
-                        contact and follow official advisories.
-                    </span>
-                </div>
-            </div>
+            <span>
+                Rainfall, temperature,
+                recent weather patterns,
+                and historical bacterial monitoring.
+            </span>
 
         </div>
+
+
+        <div class="bg-workflow-arrow">
+            →
+        </div>
+
+
+        <div class="bg-workflow-card">
+
+            <div class="bg-workflow-number">
+                2
+            </div>
+
+            <strong>
+                AquaCast Model
+            </strong>
+
+            <span>
+                Machine-learning models evaluate
+                environmental conditions associated
+                with bacterial exceedances.
+            </span>
+
+        </div>
+
+
+        <div class="bg-workflow-arrow">
+            →
+        </div>
+
+
+        <div class="bg-workflow-card">
+
+            <div class="bg-workflow-number">
+                3
+            </div>
+
+            <strong>
+                Risk Forecast
+            </strong>
+
+            <span>
+                BeachGuard converts model probabilities
+                into Safe, Caution, or Unsafe
+                decision-support categories.
+            </span>
+
+        </div>
+
     </div>
 
-    <div class="bg-footer">
-        BeachGuard
-        &nbsp;·&nbsp;
-        Experimental research prototype
+
+    <section class="bg-reading-section">
+
+        <h2>
+            What AquaCast Predicts
+        </h2>
+
+        <p>
+            AquaCast estimates the probability that
+            E. coli or Enterococcus will exceed an
+            elevated-risk concentration threshold at
+            Parkside Aquatic Park, San Mateo.
+        </p>
+
+        <p>
+            AquaCast performs classification rather than
+            attempting to predict an exact bacterial
+            concentration. Laboratory sampling is still
+            required to directly measure bacteria levels.
+        </p>
+
+    </section>
+
+
+    <section class="bg-reading-section">
+
+        <h2>
+            Model Development
+        </h2>
+
+        <p>
+            AquaCast was developed using historical
+            recreational-water monitoring and environmental
+            data. The model pipeline uses chronological
+            training, validation, and test periods so that
+            earlier observations are used to predict later
+            conditions rather than randomly mixing past
+            and future data.
+        </p>
+
+        <p>
+            Current live forecasts extend the research
+            prototype by incorporating recent and forecast
+            weather while retaining the existing AquaCast
+            model structure.
+        </p>
+
+    </section>
+
+
+    <h2 class="bg-reading-heading">
+        Data Sources
+    </h2>
+
+
+    <div class="bg-source-grid">
+
+        <a
+            class="bg-source-card"
+            href="https://www.waterboards.ca.gov/"
+            target="_blank"
+        >
+
+            <span class="bg-source-label">
+                Monitoring Data
+            </span>
+
+            <strong>
+                California Water Boards
+            </strong>
+
+            <p>
+                Historical fecal-indicator bacteria
+                monitoring records.
+            </p>
+
+        </a>
+
+
+        <a
+            class="bg-source-card"
+            href="https://www.ncei.noaa.gov/"
+            target="_blank"
+        >
+
+            <span class="bg-source-label">
+                Historical Weather
+            </span>
+
+            <strong>
+                NOAA / NCEI
+            </strong>
+
+            <p>
+                Historical precipitation and
+                temperature observations.
+            </p>
+
+        </a>
+
+
+        <a
+            class="bg-source-card"
+            href="https://open-meteo.com/"
+            target="_blank"
+        >
+
+            <span class="bg-source-label">
+                Live Forecast Weather
+            </span>
+
+            <strong>
+                Open-Meteo
+            </strong>
+
+            <p>
+                Recent and forecast environmental
+                conditions used by the live support layer.
+            </p>
+
+        </a>
+
     </div>
+
+
+    <section class="bg-reading-section">
+
+        <h2>
+            Why E. coli and Enterococcus?
+        </h2>
+
+        <p>
+            E. coli and Enterococcus are fecal-indicator
+            bacteria commonly used to evaluate recreational
+            water quality. Elevated indicator levels can
+            be associated with increased risk of illness
+            from water contact.
+        </p>
+
+    </section>
+
+
+    <section class="bg-reading-section">
+
+        <h2>
+            Development Transparency
+        </h2>
+
+        <p>
+            AI-assisted tools were used for limited
+            code support, debugging, review, and
+            documentation. The project developer remains
+            responsible for understanding, testing,
+            editing, and maintaining the submitted code.
+        </p>
+
+    </section>
 
 </div>
 """
 )
+
+
+render_footer()
