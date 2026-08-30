@@ -547,3 +547,1131 @@ button[data-testid="stExpandSidebarButton"]:focus-visible {
     visibility: visible !important;
     opacity: 1 !important;
 }
+/* ==========================================================
+   BEACHGUARD DESIGN POLISH
+   Does not modify sidebar controls.
+   ========================================================== */
+
+:root {
+    --brand: #0F6B78;
+    --brand-dark: #0A5560;
+
+    --text-main: #172033;
+    --text-muted: #667085;
+
+    --surface: #FFFFFF;
+    --page: #F5F7FA;
+    --border: #E4E7EC;
+
+    --safe: #2E7D32;
+    --caution: #B26A00;
+    --unsafe: #C62828;
+
+    --radius: 16px;
+
+    --shadow:
+        0 2px 10px rgba(16, 24, 40, 0.06);
+}
+
+
+/* ── General public-facing width ── */
+
+.bg-home-shell {
+    width: calc(100% - 2rem);
+    max-width: 980px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.bg-reading {
+    width: calc(100% - 2rem);
+    max-width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+/* ── Compact homepage hero ── */
+
+.bg-home-hero {
+    margin-top: 1.25rem;
+
+    padding: 2rem 2.1rem;
+
+    border-radius: 18px;
+
+    color: #FFFFFF;
+
+    box-shadow: var(--shadow);
+}
+
+.bg-home-hero.safe {
+    background: var(--safe);
+}
+
+.bg-home-hero.caution {
+    background: var(--caution);
+}
+
+.bg-home-hero.unsafe {
+    background: var(--unsafe);
+}
+
+.bg-home-eyebrow {
+    margin-bottom: 0.35rem;
+
+    font-size: 0.82rem;
+    font-weight: 700;
+
+    color: rgba(255,255,255,0.8);
+}
+
+.bg-home-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    gap: 0.65rem;
+
+    margin-bottom: 1.25rem;
+
+    font-size: 0.82rem;
+
+    color: rgba(255,255,255,0.78);
+}
+
+.bg-home-status {
+    display: flex;
+    align-items: center;
+
+    gap: 1rem;
+}
+
+.bg-home-status-icon {
+    width: 48px;
+    height: 48px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,0.18);
+
+    font-size: 1.55rem;
+    font-weight: 800;
+}
+
+.bg-home-status-label {
+    font-size: 2.65rem;
+    line-height: 1;
+
+    font-weight: 800;
+
+    letter-spacing: -0.03em;
+}
+
+.bg-home-status-message {
+    max-width: 600px;
+
+    margin: 0.45rem 0 0;
+
+    color: rgba(255,255,255,0.9);
+
+    font-size: 0.96rem;
+    line-height: 1.5;
+}
+
+
+/* ── Buttons ── */
+
+.bg-primary-button {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 0.75rem 1.1rem;
+
+    border-radius: 11px;
+
+    background: var(--brand);
+
+    color: #FFFFFF !important;
+
+    font-size: 0.9rem;
+    font-weight: 700;
+
+    text-decoration: none !important;
+
+    transition:
+        background 0.15s ease,
+        transform 0.15s ease;
+}
+
+.bg-primary-button:hover {
+    background: var(--brand-dark);
+
+    transform: translateY(-1px);
+}
+
+.hero-button {
+    margin-top: 1.35rem;
+
+    background: #FFFFFF;
+
+    color: #172033 !important;
+}
+
+.hero-button:hover {
+    background: #F2F4F7;
+}
+
+.full-button {
+    display: flex;
+
+    width: 100%;
+
+    margin: 1rem 0 1.5rem;
+}
+
+
+/* ── Freshness chip ── */
+
+.bg-fresh-chip {
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 0.3rem 0.6rem;
+
+    border-radius: 999px;
+
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.bg-home-hero .bg-fresh-chip {
+    background: rgba(255,255,255,0.16);
+
+    color: #FFFFFF;
+
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.bg-fresh-chip.current {
+    background: #EEF6F0;
+
+    color: #2E6A39;
+}
+
+.bg-fresh-chip.warn {
+    background: #FFF3D6;
+
+    color: #8A5500;
+}
+
+.bg-fresh-chip.stale {
+    background: #F2F4F7;
+
+    color: #475467;
+}
+
+
+/* ── Section hierarchy ── */
+
+.bg-section-title-row {
+    margin-top: 2.3rem;
+    margin-bottom: 1rem;
+}
+
+.bg-section-title {
+    margin: 0;
+
+    color: var(--text-main);
+
+    font-size: 1.3rem;
+    font-weight: 800;
+
+    letter-spacing: -0.01em;
+}
+
+.bg-section-subtitle {
+    max-width: 650px;
+
+    margin: 0.3rem 0 0;
+
+    color: var(--text-muted);
+
+    font-size: 0.88rem;
+    line-height: 1.55;
+}
+
+
+/* ── Risk cards ── */
+
+.bg-risk-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 1rem;
+}
+
+.bg-risk-card,
+.bg-risk-detail-card {
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+    border-top: 4px solid transparent;
+
+    border-radius: var(--radius);
+
+    padding: 1.5rem;
+
+    box-shadow: var(--shadow);
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.bg-risk-card:hover,
+.bg-risk-detail-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 5px 18px rgba(16,24,40,0.08);
+}
+
+.bg-risk-card.safe,
+.bg-risk-detail-card.safe {
+    border-top-color: var(--safe);
+}
+
+.bg-risk-card.caution,
+.bg-risk-detail-card.caution {
+    border-top-color: var(--caution);
+}
+
+.bg-risk-card.unsafe,
+.bg-risk-detail-card.unsafe {
+    border-top-color: var(--unsafe);
+}
+
+.bg-risk-card-top {
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.8rem;
+
+    margin-bottom: 1rem;
+}
+
+.bg-organism-icon {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 12px;
+
+    background: #EAF4F5;
+
+    color: var(--brand);
+
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.bg-risk-card-name {
+    margin-bottom: 0.25rem;
+
+    color: var(--text-main);
+
+    font-size: 1.03rem;
+    font-weight: 800;
+}
+
+.bg-risk-pill {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 0.3rem;
+
+    border-radius: 999px;
+
+    padding: 0.22rem 0.55rem;
+
+    color: #FFFFFF;
+
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.bg-risk-pill.safe {
+    background: var(--safe);
+}
+
+.bg-risk-pill.caution {
+    background: var(--caution);
+}
+
+.bg-risk-pill.unsafe {
+    background: var(--unsafe);
+}
+
+.bg-risk-value,
+.bg-detail-probability {
+    margin-top: 0.5rem;
+
+    font-size: 3.1rem;
+    line-height: 1;
+
+    font-weight: 800;
+
+    letter-spacing: -0.04em;
+
+    color: var(--text-main);
+}
+
+.bg-risk-card.safe .bg-risk-value,
+.bg-risk-detail-card.safe .bg-detail-probability {
+    color: var(--safe);
+}
+
+.bg-risk-card.caution .bg-risk-value,
+.bg-risk-detail-card.caution .bg-detail-probability {
+    color: var(--caution);
+}
+
+.bg-risk-card.unsafe .bg-risk-value,
+.bg-risk-detail-card.unsafe .bg-detail-probability {
+    color: var(--unsafe);
+}
+
+.bg-risk-value-label {
+    margin-top: 0.25rem;
+
+    color: var(--text-muted);
+
+    font-size: 0.8rem;
+}
+
+.bg-risk-threshold {
+    margin-top: 1rem;
+
+    color: var(--text-muted);
+
+    font-size: 0.78rem;
+}
+
+
+/* ── Probability meter ── */
+
+.bg-meter {
+    position: relative;
+
+    margin-top: 1.25rem;
+    margin-bottom: 1.8rem;
+
+    padding-bottom: 1rem;
+}
+
+.bg-meter-track {
+    position: relative;
+
+    width: 100%;
+    height: 10px;
+
+    border-radius: 999px;
+
+    background: #E4E7EC;
+}
+
+.bg-meter-marker {
+    position: absolute;
+
+    top: -4px;
+
+    width: 2px;
+    height: 18px;
+
+    background: #98A2B3;
+
+    transform: translateX(-50%);
+}
+
+.bg-meter-pointer {
+    position: absolute;
+
+    top: 50%;
+
+    width: 16px;
+    height: 16px;
+
+    transform:
+        translate(-50%, -50%);
+
+    border-radius: 50%;
+
+    border: 3px solid #FFFFFF;
+
+    box-shadow:
+        0 0 0 1px rgba(0,0,0,0.15);
+}
+
+.bg-meter-pointer.safe {
+    background: var(--safe);
+}
+
+.bg-meter-pointer.caution {
+    background: var(--caution);
+}
+
+.bg-meter-pointer.unsafe {
+    background: var(--unsafe);
+}
+
+.bg-meter-labels {
+    position: relative;
+
+    display: flex;
+    justify-content: space-between;
+
+    margin-top: 0.55rem;
+
+    color: #98A2B3;
+
+    font-size: 0.66rem;
+}
+
+.bg-meter-boundary {
+    position: absolute;
+
+    transform: translateX(-50%);
+
+    white-space: nowrap;
+}
+
+
+/* ── Messages / notes ── */
+
+.bg-inline-notice,
+.bg-support-note,
+.bg-small-explainer,
+.bg-how-read {
+    border-radius: 12px;
+
+    padding: 1rem 1.1rem;
+
+    font-size: 0.87rem;
+    line-height: 1.6;
+}
+
+.bg-inline-notice {
+    margin-top: 1rem;
+
+    background: #FFF7E6;
+
+    color: #7A4A00;
+
+    border: 1px solid #F3D69C;
+}
+
+.bg-support-note {
+    margin-top: 1.4rem;
+
+    background: #F2F4F7;
+
+    color: #475467;
+
+    border: 1px solid #E4E7EC;
+}
+
+.bg-small-explainer,
+.bg-how-read {
+    margin-bottom: 1.4rem;
+
+    background: #EFF6FF;
+
+    color: #344054;
+
+    border-left: 4px solid var(--brand);
+}
+
+.bg-small-explainer p,
+.bg-how-read p {
+    margin-bottom: 0;
+}
+
+
+/* ── Reading pages ── */
+
+.bg-page-heading {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.bg-page-heading h1 {
+    margin: 0;
+
+    color: var(--text-main);
+
+    font-size: 2rem;
+    font-weight: 800;
+
+    letter-spacing: -0.025em;
+}
+
+.bg-page-heading > p {
+    margin: 0.4rem 0 0;
+
+    color: var(--text-muted);
+
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.bg-page-meta {
+    display: flex;
+
+    align-items: center;
+    flex-wrap: wrap;
+
+    gap: 0.5rem;
+
+    margin-top: 0.8rem;
+
+    color: var(--text-muted);
+
+    font-size: 0.8rem;
+}
+
+.bg-reading-section {
+    margin: 2rem 0;
+}
+
+.bg-reading-section h2,
+.bg-reading-heading {
+    color: var(--text-main);
+
+    font-size: 1.25rem;
+    font-weight: 800;
+}
+
+.bg-reading-section p {
+    color: #344054;
+
+    font-size: 1rem;
+    line-height: 1.75;
+}
+
+.bg-risk-detail-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 1rem;
+
+    margin-bottom: 1.2rem;
+}
+
+.bg-risk-detail-card h2 {
+    margin: 0 0 0.25rem;
+
+    font-size: 1.05rem;
+}
+
+
+/* ── About workflow ── */
+
+.bg-workflow {
+    display: flex;
+
+    align-items: stretch;
+
+    gap: 0.7rem;
+
+    margin: 1rem 0 2.4rem;
+}
+
+.bg-workflow-card {
+    flex: 1;
+
+    background: #FFFFFF;
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    padding: 1.2rem;
+
+    box-shadow: var(--shadow);
+}
+
+.bg-workflow-number {
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 0.75rem;
+
+    border-radius: 9px;
+
+    background: #EAF4F5;
+
+    color: var(--brand);
+
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+.bg-workflow-card strong {
+    display: block;
+
+    margin-bottom: 0.4rem;
+
+    color: var(--text-main);
+
+    font-size: 0.9rem;
+}
+
+.bg-workflow-card span {
+    color: var(--text-muted);
+
+    font-size: 0.8rem;
+    line-height: 1.5;
+}
+
+.bg-workflow-arrow {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    color: #98A2B3;
+
+    font-size: 1.2rem;
+}
+
+
+/* ── Source cards ── */
+
+.bg-source-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 0.8rem;
+
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}
+
+.bg-source-card {
+    display: block;
+
+    background: #FFFFFF;
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    padding: 1.1rem;
+
+    color: inherit !important;
+
+    text-decoration: none !important;
+
+    box-shadow: var(--shadow);
+
+    transition:
+        transform 0.15s ease,
+        border-color 0.15s ease;
+}
+
+.bg-source-card:hover {
+    transform: translateY(-2px);
+
+    border-color: #A6CBCD;
+}
+
+.bg-source-label {
+    display: block;
+
+    margin-bottom: 0.4rem;
+
+    color: var(--brand);
+
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+.bg-source-card strong {
+    color: var(--text-main);
+
+    font-size: 0.9rem;
+}
+
+.bg-source-card p {
+    margin: 0.4rem 0 0;
+
+    color: var(--text-muted);
+
+    font-size: 0.8rem;
+    line-height: 1.5;
+}
+
+
+/* ── Safety / data notes ── */
+
+.bg-safety-card {
+    display: flex;
+
+    gap: 1rem;
+
+    background: #FFF7E6;
+
+    border: 1px solid #F3D69C;
+
+    border-radius: var(--radius);
+
+    padding: 1.5rem;
+
+    color: #694100;
+}
+
+.bg-safety-icon {
+    width: 40px;
+    height: 40px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #F7CF80;
+
+    font-size: 1.2rem;
+    font-weight: 800;
+}
+
+.bg-safety-card h2 {
+    margin: 0 0 0.5rem;
+
+    font-size: 1.05rem;
+}
+
+.bg-safety-card p {
+    font-size: 0.9rem;
+    line-height: 1.65;
+}
+
+.bg-notes-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 1rem;
+
+    margin-top: 1.5rem;
+}
+
+.bg-notes-card,
+.bg-data-source-summary {
+    background: #FFFFFF;
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    padding: 1.3rem;
+
+    box-shadow: var(--shadow);
+}
+
+.bg-notes-card h2,
+.bg-data-source-summary h2 {
+    margin-top: 0;
+
+    color: var(--text-main);
+
+    font-size: 1rem;
+}
+
+.bg-notes-card p {
+    color: var(--text-muted);
+
+    font-size: 0.9rem;
+    line-height: 1.65;
+}
+
+.bg-data-source-summary {
+    margin-top: 1rem;
+}
+
+.bg-source-badges {
+    display: flex;
+
+    gap: 0.5rem;
+
+    flex-wrap: wrap;
+}
+
+.bg-source-badges span {
+    padding: 0.35rem 0.65rem;
+
+    border-radius: 999px;
+
+    background: #EEF4F5;
+
+    color: #315E64;
+
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+
+/* ── Empty state ── */
+
+.bg-empty-state {
+    width: calc(100% - 2rem);
+    max-width: 650px;
+
+    margin: 4rem auto;
+
+    padding: 2rem;
+
+    text-align: center;
+
+    background: #FFFFFF;
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    box-shadow: var(--shadow);
+}
+
+.bg-empty-icon {
+    width: 46px;
+    height: 46px;
+
+    margin: 0 auto 1rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #F2F4F7;
+
+    color: #475467;
+
+    font-weight: 800;
+}
+
+
+/* ── Shared footer ── */
+
+.bg-site-footer {
+    width: calc(100% - 2rem);
+    max-width: 980px;
+
+    margin: 2.5rem auto 0;
+
+    padding: 1.5rem 0 2rem;
+
+    border-top: 1px solid var(--border);
+
+    color: #98A2B3;
+
+    font-size: 0.75rem;
+    line-height: 1.6;
+
+    text-align: center;
+}
+
+.bg-footer-links {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 0.8rem;
+
+    margin-top: 0.45rem;
+}
+
+.bg-footer-links a {
+    color: var(--brand) !important;
+
+    text-decoration: none !important;
+
+    font-weight: 600;
+}
+
+.bg-footer-links a:hover {
+    text-decoration: underline !important;
+}
+
+
+/* ── Native Streamlit buttons ── */
+
+div[data-testid="stLinkButton"] a {
+    border-radius: 11px !important;
+
+    min-height: 42px !important;
+}
+
+
+/* ── Mobile ── */
+
+@media (max-width: 640px) {
+
+    .bg-home-shell,
+    .bg-reading {
+        width: calc(100% - 1.2rem);
+    }
+
+    .bg-home-hero {
+        margin-top: 0.6rem;
+
+        padding: 1.45rem 1.15rem;
+
+        border-radius: 14px;
+    }
+
+    .bg-home-meta {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 0.4rem;
+    }
+
+    .bg-home-status {
+        align-items: flex-start;
+    }
+
+    .bg-home-status-icon {
+        width: 42px;
+        height: 42px;
+    }
+
+    .bg-home-status-label {
+        font-size: 2.15rem;
+    }
+
+    .hero-button,
+    .bg-primary-button {
+        width: 100%;
+
+        box-sizing: border-box;
+    }
+
+    .bg-risk-grid,
+    .bg-risk-detail-grid,
+    .bg-source-grid,
+    .bg-notes-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .bg-risk-value,
+    .bg-detail-probability {
+        font-size: 2.6rem;
+    }
+
+    .bg-workflow {
+        flex-direction: column;
+    }
+
+    .bg-workflow-arrow {
+        transform: rotate(90deg);
+    }
+
+    .bg-reading {
+        font-size: 1rem;
+    }
+
+    .bg-reading-section p {
+        font-size: 1rem;
+    }
+
+    .bg-page-heading {
+        margin-top: 1.2rem;
+    }
+
+    .bg-page-heading h1 {
+        font-size: 1.7rem;
+    }
+
+    .bg-safety-card {
+        padding: 1.15rem;
+    }
+
+    .bg-footer-links {
+        flex-direction: column;
+
+        gap: 0.25rem;
+    }
+
+    div[data-testid="stLinkButton"] {
+        width: 100%;
+    }
+
+    div[data-testid="stLinkButton"] a {
+        width: 100%;
+
+        justify-content: center;
+    }
+
+}
+
+
+/* ── Very small phones ── */
+
+@media (max-width: 390px) {
+
+    .bg-home-status-label {
+        font-size: 1.95rem;
+    }
+
+    .bg-risk-card,
+    .bg-risk-detail-card {
+        padding: 1.15rem;
+    }
+
+    .bg-risk-value,
+    .bg-detail-probability {
+        font-size: 2.35rem;
+    }
+
+    .bg-meter-boundary {
+        font-size: 0.6rem;
+    }
+
+}
