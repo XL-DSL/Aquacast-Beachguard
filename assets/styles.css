@@ -411,4 +411,60 @@ header.stAppHeader {
     border-top: 1px solid #E5E7EB;
     margin-top: 2rem;
 }
+/* ==========================================================
+   SIDEBAR TOGGLE BUTTON VISIBILITY
+   Make the top-left sidebar button match the sidebar color
+   ========================================================== */
 
+:root {
+    --bg-sidebar: #151938;   /* use the same dark navy as your sidebar */
+}
+
+/* collapsed / expand sidebar control wrapper */
+[data-testid="collapsedControl"],
+[data-testid="stExpandSidebarButton"] {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 9999 !important;
+}
+
+/* actual button */
+[data-testid="collapsedControl"] button,
+[data-testid="stExpandSidebarButton"] button,
+header [data-testid="baseButton-header"] {
+    background: var(--bg-sidebar) !important;
+    color: #FFFFFF !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 10px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18) !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
+    padding: 0.3rem !important;
+}
+
+/* icon color */
+[data-testid="collapsedControl"] button svg,
+[data-testid="stExpandSidebarButton"] button svg,
+header [data-testid="baseButton-header"] svg {
+    fill: #FFFFFF !important;
+    color: #FFFFFF !important;
+    stroke: #FFFFFF !important;
+}
+
+/* hover */
+[data-testid="collapsedControl"] button:hover,
+[data-testid="stExpandSidebarButton"] button:hover,
+header [data-testid="baseButton-header"]:hover {
+    background: #1C2147 !important;
+    color: #FFFFFF !important;
+    border-color: rgba(255, 255, 255, 0.18) !important;
+}
+
+/* keyboard focus */
+[data-testid="collapsedControl"] button:focus,
+[data-testid="stExpandSidebarButton"] button:focus,
+header [data-testid="baseButton-header"]:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.25) !important;
+    outline-offset: 2px !important;
+}
