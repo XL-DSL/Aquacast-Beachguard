@@ -68,31 +68,39 @@ header.stAppHeader {
     background-color: #1A1A2E !important;
     border-right: none !important;
 }
+
 [data-testid="stSidebar"] * {
     color: #FFFFFF !important;
 }
+
 [data-testid="stSidebar"] a {
     color: #FFFFFF !important;
     text-decoration: none !important;
     font-weight: 500 !important;
 }
+
 [data-testid="stSidebar"] a:hover {
     color: #90CAF9 !important;
 }
+
 [data-testid="stSidebarNav"] {
     padding-top: 1rem !important;
 }
+
 [data-testid="stSidebarNavItems"] {
     gap: 0.25rem !important;
 }
+
 [data-testid="stSidebarNavLink"] {
     border-radius: 8px !important;
     padding: 0.5rem 0.75rem !important;
     transition: background 0.15s ease !important;
 }
+
 [data-testid="stSidebarNavLink"]:hover {
     background: rgba(255,255,255,0.08) !important;
 }
+
 [data-testid="stSidebarNavLink"][aria-current="page"] {
     background: rgba(255,255,255,0.14) !important;
 }
@@ -105,6 +113,7 @@ header.stAppHeader {
     position: relative;
     overflow: hidden;
 }
+
 .bg-hero::after {
     content: "";
     position: absolute;
@@ -112,6 +121,7 @@ header.stAppHeader {
     background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, transparent 60%);
     pointer-events: none;
 }
+
 .bg-hero-site {
     font-size: 0.85rem;
     font-weight: 600;
@@ -120,12 +130,14 @@ header.stAppHeader {
     color: rgba(255,255,255,0.75);
     margin: 0 0 1rem 0;
 }
+
 .bg-hero-status {
     display: flex;
     align-items: center;
     gap: 1rem;
     margin: 0 0 0.75rem 0;
 }
+
 .bg-hero-label {
     font-size: 3.5rem;
     font-weight: 800;
@@ -133,12 +145,14 @@ header.stAppHeader {
     letter-spacing: -0.02em;
     line-height: 1;
 }
+
 .bg-hero-message {
     font-size: 1rem;
     color: rgba(255,255,255,0.85);
     margin: 0;
     max-width: 560px;
 }
+
 .bg-hero-date {
     font-size: 0.8rem;
     color: rgba(255,255,255,0.55);
@@ -151,6 +165,7 @@ header.stAppHeader {
     gap: 1rem;
     margin-bottom: 2rem;
 }
+
 .bg-stat {
     flex: 1;
     background: #FFFFFF;
@@ -158,6 +173,7 @@ header.stAppHeader {
     padding: 1.1rem 1.25rem;
     box-shadow: 0 1px 4px rgba(0,0,0,0.07);
 }
+
 .bg-stat-label {
     font-size: 0.75rem;
     font-weight: 600;
@@ -166,6 +182,7 @@ header.stAppHeader {
     color: #6B7280;
     margin: 0 0 0.3rem 0;
 }
+
 .bg-stat-value {
     font-size: 1.1rem;
     font-weight: 700;
@@ -184,11 +201,13 @@ header.stAppHeader {
     align-items: center;
     gap: 0.5rem;
 }
+
 .bg-freshness.warn {
     background: #FFF8E1;
     color: #92400E;
     border: 1px solid #FDE68A;
 }
+
 .bg-freshness.error {
     background: #FEF2F2;
     color: #991B1B;
@@ -211,6 +230,7 @@ header.stAppHeader {
     gap: 1rem;
     margin-bottom: 2rem;
 }
+
 .bg-card {
     flex: 1;
     background: #FFFFFF;
@@ -220,9 +240,18 @@ header.stAppHeader {
     border-top: 4px solid transparent;
     transition: box-shadow 0.2s ease;
 }
-.bg-card.safe    { border-top-color: #2E7D32; }
-.bg-card.caution { border-top-color: #F57F17; }
-.bg-card.unsafe  { border-top-color: #C62828; }
+
+.bg-card.safe {
+    border-top-color: #2E7D32;
+}
+
+.bg-card.caution {
+    border-top-color: #F57F17;
+}
+
+.bg-card.unsafe {
+    border-top-color: #C62828;
+}
 
 .bg-card-name {
     font-size: 0.75rem;
@@ -232,6 +261,7 @@ header.stAppHeader {
     color: #6B7280;
     margin: 0 0 0.75rem 0;
 }
+
 .bg-card-prob {
     font-size: 3.5rem;
     font-weight: 800;
@@ -239,15 +269,25 @@ header.stAppHeader {
     line-height: 1;
     margin: 0 0 0.25rem 0;
 }
-.bg-card.safe    .bg-card-prob { color: #2E7D32; }
-.bg-card.caution .bg-card-prob { color: #F57F17; }
-.bg-card.unsafe  .bg-card-prob { color: #C62828; }
+
+.bg-card.safe .bg-card-prob {
+    color: #2E7D32;
+}
+
+.bg-card.caution .bg-card-prob {
+    color: #F57F17;
+}
+
+.bg-card.unsafe .bg-card-prob {
+    color: #C62828;
+}
 
 .bg-card-sublabel {
     font-size: 0.8rem;
     color: #6B7280;
     margin: 0 0 1rem 0;
 }
+
 .bg-badge {
     display: inline-flex;
     align-items: center;
@@ -259,9 +299,18 @@ header.stAppHeader {
     color: #FFFFFF;
     margin-bottom: 0.75rem;
 }
-.bg-badge.safe    { background: #2E7D32; }
-.bg-badge.caution { background: #F57F17; }
-.bg-badge.unsafe  { background: #C62828; }
+
+.bg-badge.safe {
+    background: #2E7D32;
+}
+
+.bg-badge.caution {
+    background: #F57F17;
+}
+
+.bg-badge.unsafe {
+    background: #C62828;
+}
 
 .bg-card-threshold {
     font-size: 0.78rem;
@@ -278,12 +327,14 @@ header.stAppHeader {
     box-shadow: 0 1px 4px rgba(0,0,0,0.07);
     margin-bottom: 1.25rem;
 }
+
 .bg-detail-card h3 {
     font-size: 1rem;
     font-weight: 700;
     margin: 0.75rem 0 0.5rem 0;
     color: #1A1A2E;
 }
+
 .bg-detail-card p {
     font-size: 0.9rem;
     color: #374151;
@@ -307,24 +358,28 @@ header.stAppHeader {
 .bg-about-section {
     margin-bottom: 2.5rem;
 }
+
 .bg-about-section h2 {
     font-size: 1.1rem;
     font-weight: 700;
     color: #1A1A2E;
     margin: 0 0 0.5rem 0;
 }
+
 .bg-about-section p {
     font-size: 0.925rem;
     color: #374151;
     line-height: 1.7;
     margin: 0;
 }
+
 .bg-risk-chip-row {
     display: flex;
     gap: 0.75rem;
     flex-wrap: wrap;
     margin-top: 1rem;
 }
+
 .bg-risk-chip {
     display: flex;
     align-items: flex-start;
@@ -336,6 +391,7 @@ header.stAppHeader {
     min-width: 160px;
     box-shadow: 0 1px 4px rgba(0,0,0,0.07);
 }
+
 .bg-risk-chip-dot {
     width: 12px;
     height: 12px;
@@ -343,12 +399,14 @@ header.stAppHeader {
     margin-top: 3px;
     flex-shrink: 0;
 }
+
 .bg-risk-chip-text strong {
     font-size: 0.875rem;
     font-weight: 700;
     display: block;
     margin-bottom: 0.2rem;
 }
+
 .bg-risk-chip-text span {
     font-size: 0.8rem;
     color: #6B7280;
@@ -366,6 +424,7 @@ header.stAppHeader {
     color: #78350F;
     line-height: 1.7;
 }
+
 .bg-advisory-btn {
     display: block;
     background: #1A1A2E;
@@ -379,9 +438,11 @@ header.stAppHeader {
     margin-bottom: 2rem;
     transition: background 0.15s ease;
 }
+
 .bg-advisory-btn:hover {
     background: #2D2D4E;
 }
+
 .bg-data-notes {
     background: #F9FAFB;
     border-radius: 12px;
@@ -411,110 +472,21 @@ header.stAppHeader {
     border-top: 1px solid #E5E7EB;
     margin-top: 2rem;
 }
+
 /* ==========================================================
-   CLOSED SIDEBAR REOPEN BUTTON ONLY
-   Do NOT modify the normal/open sidebar behavior.
+   CLOSED SIDEBAR REOPEN BUTTON
+   Only changes the >> button shown while the sidebar is closed.
    ========================================================== */
 
-:root {
-    --beachguard-sidebar: #17182D;
-}
-
-
-/* The reopen button lives in Streamlit's header.
-   Keep the header available or the button disappears. */
-header[data-testid="stHeader"],
-header.stAppHeader {
-    display: block !important;
-    visibility: visible !important;
-    background: transparent !important;
-    box-shadow: none !important;
-}
-
-
-/* Keep Streamlit's CLOSED-sidebar expand control available. */
-[data-testid="stExpandSidebarButton"] {
-    display: flex !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    z-index: 99999 !important;
-}
-
-
-/* Style ONLY the reopen button when the sidebar is collapsed. */
-body:has([data-testid="stSidebar"][aria-expanded="false"])
-[data-testid="stExpandSidebarButton"]
-[data-testid="stBaseButton-headerNoPadding"],
-
-body:has([data-testid="stSidebar"][aria-expanded="false"])
-[data-testid="stExpandSidebarButton"] button {
-
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-
-    width: 42px !important;
-    height: 38px !important;
-    min-width: 42px !important;
-    min-height: 38px !important;
-
-    padding: 0 !important;
-
-    background-color: var(--beachguard-sidebar) !important;
-
-    border: none !important;
-    border-radius: 10px !important;
-    box-shadow: none !important;
-
-    color: #FFFFFF !important;
-}
-
-
-/* White >> icon */
-body:has([data-testid="stSidebar"][aria-expanded="false"])
-[data-testid="stExpandSidebarButton"] span,
-
-body:has([data-testid="stSidebar"][aria-expanded="false"])
-[data-testid="stExpandSidebarButton"] svg {
-
-    color: #FFFFFF !important;
-    fill: #FFFFFF !important;
-    stroke: #FFFFFF !important;
-}
-
-
-/* Preserve Streamlit's Material icon font */
-body:has([data-testid="stSidebar"][aria-expanded="false"])
-[data-testid="stExpandSidebarButton"] span {
-
-    font-family: "Material Symbols Rounded" !important;
-}
-
-
-/* Slight hover feedback */
-body:has([data-testid="stSidebar"][aria-expanded="false"])
-[data-testid="stExpandSidebarButton"]
-[data-testid="stBaseButton-headerNoPadding"]:hover,
-
-body:has([data-testid="stSidebar"][aria-expanded="false"])
-[data-testid="stExpandSidebarButton"] button:hover {
-
-    background-color: #222640 !important;
-    border-radius: 10px !important;
-}
-/* ==========================================================
-   CLOSED SIDEBAR BUTTON ONLY
-   ========================================================== */
-
-/* This button exists ONLY when the sidebar is closed */
+header[data-testid="stHeader"]
 button[data-testid="stExpandSidebarButton"] {
-    background-color: #17182D !important;
+    background-color: #1A1A2E !important;
     color: #FFFFFF !important;
 
-    width: 42px !important;
-    height: 38px !important;
-    min-width: 42px !important;
-    min-height: 38px !important;
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
 
     padding: 0 !important;
 
@@ -527,23 +499,19 @@ button[data-testid="stExpandSidebarButton"] {
     justify-content: center !important;
 }
 
-
-/* Make the >> icon white */
-button[data-testid="stExpandSidebarButton"] * {
+header[data-testid="stHeader"]
+button[data-testid="stExpandSidebarButton"] span {
     color: #FFFFFF !important;
 }
 
-
-/* In case Streamlit renders the icon as SVG */
+header[data-testid="stHeader"]
 button[data-testid="stExpandSidebarButton"] svg {
     color: #FFFFFF !important;
     fill: #FFFFFF !important;
     stroke: #FFFFFF !important;
 }
 
-
-/* Small hover effect */
+header[data-testid="stHeader"]
 button[data-testid="stExpandSidebarButton"]:hover {
-    background-color: #222640 !important;
-    border-radius: 10px !important;
+    background-color: #2D2D4E !important;
 }
