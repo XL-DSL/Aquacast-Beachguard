@@ -412,15 +412,15 @@ header.stAppHeader {
     margin-top: 2rem;
 }
 /* ==========================================================
-   SIDEBAR TOGGLE BUTTON VISIBILITY
-   Make the top-left sidebar button match the sidebar color
+   SIDEBAR TOGGLE
+   Keep original icon style, only give it sidebar background
    ========================================================== */
 
 :root {
-    --bg-sidebar: #151938;   /* use the same dark navy as your sidebar */
+    --bg-sidebar: #151938;
 }
 
-/* collapsed / expand sidebar control wrapper */
+/* keep the control visible */
 [data-testid="collapsedControl"],
 [data-testid="stExpandSidebarButton"] {
     display: flex !important;
@@ -429,21 +429,29 @@ header.stAppHeader {
     z-index: 9999 !important;
 }
 
-/* actual button */
-[data-testid="collapsedControl"] button,
-[data-testid="stExpandSidebarButton"] button,
+/* make only the background area match the sidebar */
+[data-testid="collapsedControl"],
+[data-testid="stExpandSidebarButton"],
 header [data-testid="baseButton-header"] {
     background: var(--bg-sidebar) !important;
-    color: #FFFFFF !important;
-    border: 1px solid rgba(255, 255, 255, 0.12) !important;
-    border-radius: 10px !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18) !important;
-    min-width: 36px !important;
-    min-height: 36px !important;
-    padding: 0.3rem !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
 }
 
-/* icon color */
+/* keep the actual button looking normal */
+[data-testid="collapsedControl"] button,
+[data-testid="stExpandSidebarButton"] button,
+header [data-testid="baseButton-header"] button {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
+    padding: 0.25rem !important;
+}
+
+/* icon stays white */
 [data-testid="collapsedControl"] button svg,
 [data-testid="stExpandSidebarButton"] button svg,
 header [data-testid="baseButton-header"] svg {
@@ -452,19 +460,11 @@ header [data-testid="baseButton-header"] svg {
     stroke: #FFFFFF !important;
 }
 
-/* hover */
+/* hover stays subtle, not a separate button box */
 [data-testid="collapsedControl"] button:hover,
 [data-testid="stExpandSidebarButton"] button:hover,
-header [data-testid="baseButton-header"]:hover {
-    background: #1C2147 !important;
-    color: #FFFFFF !important;
-    border-color: rgba(255, 255, 255, 0.18) !important;
-}
-
-/* keyboard focus */
-[data-testid="collapsedControl"] button:focus,
-[data-testid="stExpandSidebarButton"] button:focus,
-header [data-testid="baseButton-header"]:focus {
-    outline: 2px solid rgba(255, 255, 255, 0.25) !important;
-    outline-offset: 2px !important;
+header [data-testid="baseButton-header"] button:hover {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
 }
