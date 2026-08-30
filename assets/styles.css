@@ -412,122 +412,165 @@ header.stAppHeader {
     margin-top: 2rem;
 }
 /* ==========================================================
-   SIDEBAR TOGGLE BUTTONS
-   Keep original Streamlit appearance, but make the area
-   behind the arrows match the sidebar so they stay visible.
+   BEACHGUARD SIDEBAR TOGGLE
+   Always visible + dark sidebar background + rounded edges
    ========================================================== */
 
-/* Sidebar color */
 :root {
     --beachguard-sidebar: #17182D;
 }
 
 
-/* ==========================================================
-   WHEN SIDEBAR IS OPEN
-   The << collapse button inside the sidebar
-   ========================================================== */
+/* ----------------------------------------------------------
+   SIDEBAR OPEN: << collapse button
+   Streamlit normally hides this until hover.
+   Force it to stay visible.
+   ---------------------------------------------------------- */
 
 [data-testid="stSidebarCollapseButton"] {
-    background: var(--beachguard-sidebar) !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+[data-testid="stSidebarCollapseButton"]
+button[data-testid="stBaseButton-headerNoPadding"] {
+    visibility: visible !important;
+    opacity: 1 !important;
+
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+
+    padding: 0 !important;
+
+    background-color: var(--beachguard-sidebar) !important;
+
     border: none !important;
+    border-radius: 10px !important;
     box-shadow: none !important;
-    border-radius: 0 !important;
-}
 
-[data-testid="stSidebarCollapseButton"] button {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    border-radius: 0 !important;
-}
-
-[data-testid="stSidebarCollapseButton"] button:hover {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-
-[data-testid="stSidebarCollapseButton"] span,
-[data-testid="stSidebarCollapseButton"] svg {
-    color: #FFFFFF !important;
-    fill: #FFFFFF !important;
-    stroke: #FFFFFF !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
 }
 
 
-/* ==========================================================
-   WHEN SIDEBAR IS CLOSED
-   The >> reopen button in the top-left corner
-   ========================================================== */
+/* ----------------------------------------------------------
+   SIDEBAR CLOSED: >> expand button
+   ---------------------------------------------------------- */
 
 [data-testid="stExpandSidebarButton"] {
+    visibility: visible !important;
+    opacity: 1 !important;
+
+    background: transparent !important;
+
+    padding: 8px !important;
+
+    z-index: 999999 !important;
+}
+
+[data-testid="stExpandSidebarButton"]
+button[data-testid="stBaseButton-headerNoPadding"] {
+    visibility: visible !important;
+    opacity: 1 !important;
+
+    width: 44px !important;
+    height: 40px !important;
+    min-width: 44px !important;
+    min-height: 40px !important;
+
+    padding: 0 !important;
+
+    background-color: var(--beachguard-sidebar) !important;
+
+    border: none !important;
+    border-radius: 10px !important;
+
+    box-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.16) !important;
+
     display: flex !important;
-    background: var(--beachguard-sidebar) !important;
-    border: none !important;
-    box-shadow: none !important;
-    border-radius: 0 !important;
+    align-items: center !important;
+    justify-content: center !important;
 }
 
-[data-testid="stExpandSidebarButton"] button {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    border-radius: 0 !important;
-}
+
+/* ----------------------------------------------------------
+   WHITE DOUBLE-ARROW ICONS
+   ---------------------------------------------------------- */
+
+[data-testid="stSidebarCollapseButton"]
+button[data-testid="stBaseButton-headerNoPadding"] span,
 
 [data-testid="stExpandSidebarButton"]
-[data-testid="stBaseButton-headerNoPadding"] {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    border-radius: 0 !important;
+button[data-testid="stBaseButton-headerNoPadding"] span {
+    color: #FFFFFF !important;
 }
 
-[data-testid="stExpandSidebarButton"] button:hover,
+
+[data-testid="stSidebarCollapseButton"]
+button[data-testid="stBaseButton-headerNoPadding"] svg,
+
 [data-testid="stExpandSidebarButton"]
-[data-testid="stBaseButton-headerNoPadding"]:hover {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-
-[data-testid="stExpandSidebarButton"] span,
-[data-testid="stExpandSidebarButton"] svg {
+button[data-testid="stBaseButton-headerNoPadding"] svg {
     color: #FFFFFF !important;
     fill: #FFFFFF !important;
     stroke: #FFFFFF !important;
 }
 
 
-/* ==========================================================
-   FALLBACK FOR STREAMLIT VERSIONS USING collapsedControl
-   ========================================================== */
+/* Material-symbol icon specifically */
+[data-testid="stSidebarCollapseButton"] .material-symbols-rounded,
+[data-testid="stSidebarCollapseButton"] .material-symbols-outlined,
+[data-testid="stExpandSidebarButton"] .material-symbols-rounded,
+[data-testid="stExpandSidebarButton"] .material-symbols-outlined {
+    color: #FFFFFF !important;
+}
+
+
+/* ----------------------------------------------------------
+   HOVER
+   Keep the same appearance, just slightly lighter.
+   ---------------------------------------------------------- */
+
+[data-testid="stSidebarCollapseButton"]
+button[data-testid="stBaseButton-headerNoPadding"]:hover,
+
+[data-testid="stExpandSidebarButton"]
+button[data-testid="stBaseButton-headerNoPadding"]:hover {
+    background-color: #222640 !important;
+    border-radius: 10px !important;
+}
+
+
+/* ----------------------------------------------------------
+   OLD STREAMLIT FALLBACK
+   ---------------------------------------------------------- */
 
 [data-testid="collapsedControl"] {
+    visibility: visible !important;
+    opacity: 1 !important;
     display: flex !important;
-    background: var(--beachguard-sidebar) !important;
-    border: none !important;
-    box-shadow: none !important;
-    border-radius: 0 !important;
+
+    background-color: var(--beachguard-sidebar) !important;
+
+    border-radius: 10px !important;
+    padding: 4px !important;
+
+    z-index: 999999 !important;
 }
 
-[data-testid="collapsedControl"] button {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    border-radius: 0 !important;
-}
+[data-testid="collapsedControl"]
+button[data-testid="stBaseButton-headerNoPadding"] {
+    background-color: var(--beachguard-sidebar) !important;
 
-[data-testid="collapsedControl"] button:hover {
-    background: transparent !important;
     border: none !important;
-    box-shadow: none !important;
-}
+    border-radius: 8px !important;
 
-[data-testid="collapsedControl"] span,
-[data-testid="collapsedControl"] svg {
     color: #FFFFFF !important;
-    fill: #FFFFFF !important;
-    stroke: #FFFFFF !important;
 }
