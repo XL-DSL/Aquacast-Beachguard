@@ -412,6 +412,97 @@ header.stAppHeader {
     margin-top: 2rem;
 }
 /* ==========================================================
+   CLOSED SIDEBAR REOPEN BUTTON ONLY
+   Do NOT modify the normal/open sidebar behavior.
+   ========================================================== */
+
+:root {
+    --beachguard-sidebar: #17182D;
+}
+
+
+/* The reopen button lives in Streamlit's header.
+   Keep the header available or the button disappears. */
+header[data-testid="stHeader"],
+header.stAppHeader {
+    display: block !important;
+    visibility: visible !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+
+/* Keep Streamlit's CLOSED-sidebar expand control available. */
+[data-testid="stExpandSidebarButton"] {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    z-index: 99999 !important;
+}
+
+
+/* Style ONLY the reopen button when the sidebar is collapsed. */
+body:has([data-testid="stSidebar"][aria-expanded="false"])
+[data-testid="stExpandSidebarButton"]
+[data-testid="stBaseButton-headerNoPadding"],
+
+body:has([data-testid="stSidebar"][aria-expanded="false"])
+[data-testid="stExpandSidebarButton"] button {
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    width: 42px !important;
+    height: 38px !important;
+    min-width: 42px !important;
+    min-height: 38px !important;
+
+    padding: 0 !important;
+
+    background-color: var(--beachguard-sidebar) !important;
+
+    border: none !important;
+    border-radius: 10px !important;
+    box-shadow: none !important;
+
+    color: #FFFFFF !important;
+}
+
+
+/* White >> icon */
+body:has([data-testid="stSidebar"][aria-expanded="false"])
+[data-testid="stExpandSidebarButton"] span,
+
+body:has([data-testid="stSidebar"][aria-expanded="false"])
+[data-testid="stExpandSidebarButton"] svg {
+
+    color: #FFFFFF !important;
+    fill: #FFFFFF !important;
+    stroke: #FFFFFF !important;
+}
+
+
+/* Preserve Streamlit's Material icon font */
+body:has([data-testid="stSidebar"][aria-expanded="false"])
+[data-testid="stExpandSidebarButton"] span {
+
+    font-family: "Material Symbols Rounded" !important;
+}
+
+
+/* Slight hover feedback */
+body:has([data-testid="stSidebar"][aria-expanded="false"])
+[data-testid="stExpandSidebarButton"]
+[data-testid="stBaseButton-headerNoPadding"]:hover,
+
+body:has([data-testid="stSidebar"][aria-expanded="false"])
+[data-testid="stExpandSidebarButton"] button:hover {
+
+    background-color: #222640 !important;
+    border-radius: 10px !important;
+}
+/* ==========================================================
    CLOSED SIDEBAR BUTTON ONLY
    ========================================================== */
 
