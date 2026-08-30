@@ -412,8 +412,8 @@ header.stAppHeader {
     margin-top: 2rem;
 }
 /* ==========================================================
-   BEACHGUARD SIDEBAR TOGGLE
-   Always visible + dark sidebar background + rounded edges
+   CLOSED SIDEBAR REOPEN BUTTON ONLY
+   Do NOT modify the normal/open sidebar behavior.
    ========================================================== */
 
 :root {
@@ -421,29 +421,42 @@ header.stAppHeader {
 }
 
 
-/* ----------------------------------------------------------
-   SIDEBAR OPEN: << collapse button
-   Streamlit normally hides this until hover.
-   Force it to stay visible.
-   ---------------------------------------------------------- */
-
-[data-testid="stSidebarCollapseButton"] {
+/* The reopen button lives in Streamlit's header.
+   Keep the header available or the button disappears. */
+header[data-testid="stHeader"],
+header.stAppHeader {
+    display: block !important;
     visibility: visible !important;
-    opacity: 1 !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
+    background: transparent !important;
+    box-shadow: none !important;
 }
 
-[data-testid="stSidebarCollapseButton"]
-button[data-testid="stBaseButton-headerNoPadding"] {
+
+/* Keep Streamlit's CLOSED-sidebar expand control available. */
+[data-testid="stExpandSidebarButton"] {
+    display: flex !important;
     visibility: visible !important;
     opacity: 1 !important;
+    z-index: 99999 !important;
+}
 
-    width: 40px !important;
-    height: 40px !important;
-    min-width: 40px !important;
-    min-height: 40px !important;
+
+/* Style ONLY the reopen button when the sidebar is collapsed. */
+body:has([data-testid="stSidebar"][aria-expanded="false"])
+[data-testid="stExpandSidebarButton"]
+[data-testid="stBaseButton-headerNoPadding"],
+
+body:has([data-testid="stSidebar"][aria-expanded="false"])
+[data-testid="stExpandSidebarButton"] button {
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    width: 42px !important;
+    height: 38px !important;
+    min-width: 42px !important;
+    min-height: 38px !important;
 
     padding: 0 !important;
 
@@ -453,124 +466,39 @@ button[data-testid="stBaseButton-headerNoPadding"] {
     border-radius: 10px !important;
     box-shadow: none !important;
 
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-}
-
-
-/* ----------------------------------------------------------
-   SIDEBAR CLOSED: >> expand button
-   ---------------------------------------------------------- */
-
-[data-testid="stExpandSidebarButton"] {
-    visibility: visible !important;
-    opacity: 1 !important;
-
-    background: transparent !important;
-
-    padding: 8px !important;
-
-    z-index: 999999 !important;
-}
-
-[data-testid="stExpandSidebarButton"]
-button[data-testid="stBaseButton-headerNoPadding"] {
-    visibility: visible !important;
-    opacity: 1 !important;
-
-    width: 44px !important;
-    height: 40px !important;
-    min-width: 44px !important;
-    min-height: 40px !important;
-
-    padding: 0 !important;
-
-    background-color: var(--beachguard-sidebar) !important;
-
-    border: none !important;
-    border-radius: 10px !important;
-
-    box-shadow:
-        0 1px 3px rgba(0, 0, 0, 0.16) !important;
-
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-}
-
-
-/* ----------------------------------------------------------
-   WHITE DOUBLE-ARROW ICONS
-   ---------------------------------------------------------- */
-
-[data-testid="stSidebarCollapseButton"]
-button[data-testid="stBaseButton-headerNoPadding"] span,
-
-[data-testid="stExpandSidebarButton"]
-button[data-testid="stBaseButton-headerNoPadding"] span {
     color: #FFFFFF !important;
 }
 
 
-[data-testid="stSidebarCollapseButton"]
-button[data-testid="stBaseButton-headerNoPadding"] svg,
+/* White >> icon */
+body:has([data-testid="stSidebar"][aria-expanded="false"])
+[data-testid="stExpandSidebarButton"] span,
 
-[data-testid="stExpandSidebarButton"]
-button[data-testid="stBaseButton-headerNoPadding"] svg {
+body:has([data-testid="stSidebar"][aria-expanded="false"])
+[data-testid="stExpandSidebarButton"] svg {
+
     color: #FFFFFF !important;
     fill: #FFFFFF !important;
     stroke: #FFFFFF !important;
 }
 
 
-/* Material-symbol icon specifically */
-[data-testid="stSidebarCollapseButton"] .material-symbols-rounded,
-[data-testid="stSidebarCollapseButton"] .material-symbols-outlined,
-[data-testid="stExpandSidebarButton"] .material-symbols-rounded,
-[data-testid="stExpandSidebarButton"] .material-symbols-outlined {
-    color: #FFFFFF !important;
+/* Preserve Streamlit's Material icon font */
+body:has([data-testid="stSidebar"][aria-expanded="false"])
+[data-testid="stExpandSidebarButton"] span {
+
+    font-family: "Material Symbols Rounded" !important;
 }
 
 
-/* ----------------------------------------------------------
-   HOVER
-   Keep the same appearance, just slightly lighter.
-   ---------------------------------------------------------- */
-
-[data-testid="stSidebarCollapseButton"]
-button[data-testid="stBaseButton-headerNoPadding"]:hover,
-
+/* Slight hover feedback */
+body:has([data-testid="stSidebar"][aria-expanded="false"])
 [data-testid="stExpandSidebarButton"]
-button[data-testid="stBaseButton-headerNoPadding"]:hover {
+[data-testid="stBaseButton-headerNoPadding"]:hover,
+
+body:has([data-testid="stSidebar"][aria-expanded="false"])
+[data-testid="stExpandSidebarButton"] button:hover {
+
     background-color: #222640 !important;
     border-radius: 10px !important;
-}
-
-
-/* ----------------------------------------------------------
-   OLD STREAMLIT FALLBACK
-   ---------------------------------------------------------- */
-
-[data-testid="collapsedControl"] {
-    visibility: visible !important;
-    opacity: 1 !important;
-    display: flex !important;
-
-    background-color: var(--beachguard-sidebar) !important;
-
-    border-radius: 10px !important;
-    padding: 4px !important;
-
-    z-index: 999999 !important;
-}
-
-[data-testid="collapsedControl"]
-button[data-testid="stBaseButton-headerNoPadding"] {
-    background-color: var(--beachguard-sidebar) !important;
-
-    border: none !important;
-    border-radius: 8px !important;
-
-    color: #FFFFFF !important;
 }
