@@ -412,59 +412,122 @@ header.stAppHeader {
     margin-top: 2rem;
 }
 /* ==========================================================
-   SIDEBAR TOGGLE
-   Keep original icon style, only give it sidebar background
+   SIDEBAR TOGGLE BUTTONS
+   Keep original Streamlit appearance, but make the area
+   behind the arrows match the sidebar so they stay visible.
    ========================================================== */
 
+/* Sidebar color */
 :root {
-    --bg-sidebar: #151938;
+    --beachguard-sidebar: #17182D;
 }
 
-/* keep the control visible */
-[data-testid="collapsedControl"],
-[data-testid="stExpandSidebarButton"] {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    z-index: 9999 !important;
-}
 
-/* make only the background area match the sidebar */
-[data-testid="collapsedControl"],
-[data-testid="stExpandSidebarButton"],
-header [data-testid="baseButton-header"] {
-    background: var(--bg-sidebar) !important;
-    border-radius: 0 !important;
+/* ==========================================================
+   WHEN SIDEBAR IS OPEN
+   The << collapse button inside the sidebar
+   ========================================================== */
+
+[data-testid="stSidebarCollapseButton"] {
+    background: var(--beachguard-sidebar) !important;
+    border: none !important;
     box-shadow: none !important;
+    border-radius: 0 !important;
 }
 
-/* keep the actual button looking normal */
-[data-testid="collapsedControl"] button,
-[data-testid="stExpandSidebarButton"] button,
-header [data-testid="baseButton-header"] button {
+[data-testid="stSidebarCollapseButton"] button {
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
     border-radius: 0 !important;
-    min-width: 36px !important;
-    min-height: 36px !important;
-    padding: 0.25rem !important;
 }
 
-/* icon stays white */
-[data-testid="collapsedControl"] button svg,
-[data-testid="stExpandSidebarButton"] button svg,
-header [data-testid="baseButton-header"] svg {
-    fill: #FFFFFF !important;
+[data-testid="stSidebarCollapseButton"] button:hover {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+[data-testid="stSidebarCollapseButton"] span,
+[data-testid="stSidebarCollapseButton"] svg {
     color: #FFFFFF !important;
+    fill: #FFFFFF !important;
     stroke: #FFFFFF !important;
 }
 
-/* hover stays subtle, not a separate button box */
-[data-testid="collapsedControl"] button:hover,
-[data-testid="stExpandSidebarButton"] button:hover,
-header [data-testid="baseButton-header"] button:hover {
+
+/* ==========================================================
+   WHEN SIDEBAR IS CLOSED
+   The >> reopen button in the top-left corner
+   ========================================================== */
+
+[data-testid="stExpandSidebarButton"] {
+    display: flex !important;
+    background: var(--beachguard-sidebar) !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+}
+
+[data-testid="stExpandSidebarButton"] button {
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
+    border-radius: 0 !important;
+}
+
+[data-testid="stExpandSidebarButton"]
+[data-testid="stBaseButton-headerNoPadding"] {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+}
+
+[data-testid="stExpandSidebarButton"] button:hover,
+[data-testid="stExpandSidebarButton"]
+[data-testid="stBaseButton-headerNoPadding"]:hover {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+[data-testid="stExpandSidebarButton"] span,
+[data-testid="stExpandSidebarButton"] svg {
+    color: #FFFFFF !important;
+    fill: #FFFFFF !important;
+    stroke: #FFFFFF !important;
+}
+
+
+/* ==========================================================
+   FALLBACK FOR STREAMLIT VERSIONS USING collapsedControl
+   ========================================================== */
+
+[data-testid="collapsedControl"] {
+    display: flex !important;
+    background: var(--beachguard-sidebar) !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+}
+
+[data-testid="collapsedControl"] button {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+}
+
+[data-testid="collapsedControl"] button:hover {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+[data-testid="collapsedControl"] span,
+[data-testid="collapsedControl"] svg {
+    color: #FFFFFF !important;
+    fill: #FFFFFF !important;
+    stroke: #FFFFFF !important;
 }
