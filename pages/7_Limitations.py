@@ -31,11 +31,24 @@ st.caption(
 # EXPERIMENTAL STATUS
 # ==========================================================
 
-st.warning(
-    "BeachGuard is an experimental research prototype "
-    "and is not an official water-quality advisory."
+st.html(
+    """
+<div style="
+    background:#FFF8CC;
+    color:#5C4A00;
+    border:1px solid #F1E59A;
+    border-radius:12px;
+    padding:1rem 1.1rem;
+    margin-bottom:1.5rem;
+    font-size:0.9rem;
+    font-weight:600;
+    line-height:1.5;
+">
+    BeachGuard is an experimental research prototype
+    and is not an official water-quality advisory.
+</div>
+"""
 )
-
 
 # ==========================================================
 # ONE PILOT SITE
