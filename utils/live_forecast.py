@@ -6,51 +6,94 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
+import joblib
 import numpy as np
 import pandas as pd
-import streamlit as st
 import sklearn
+import streamlit as st
 
-# Compatibility shim for model artifacts created with a scikit-learn
-# version that serialized the private `_loss` module by its short name.
+
+# ==========================================================
+# SCIKIT-LEARN COMPATIBILITY
+# ==========================================================
+
 try:
     import sklearn._loss._loss as sklearn_loss_core
 
-    sys.modules.setdefault("_loss", sklearn_loss_core)
+    sys.modules.setdefault(
+        "_loss",
+        sklearn_loss_core,
+    )
+
 except Exception:
     pass
 
-import joblib
 
+# ==========================================================
+# PATHS / SITE INFORMATION
+# ==========================================================
 
 ROOT = Path(__file__).resolve().parent.parent
-DATA_PATH = ROOT / "data" / "Aquacast15Years_Weekly.csv"
-MODEL_DIR = ROOT / "models"
-MANIFEST = MODEL_DIR / "model_manifest.json"
 
-SITE_ID = "parkside_aquatic_park_san_mateo"
-SITE_NAME = "Parkside Aquatic Park, San Mateo"
+DATA_PATH = (
+    ROOT
+    / "data"
+    / "Aquacast15Years_Weekly.csv"
+)
+
+MODEL_DIR = (
+    ROOT
+    / "models"
+)
+
+MANIFEST = (
+    MODEL_DIR
+    / "model_manifest.json"
+)
+
+
+SITE_ID = (
+    "parkside_aquatic_park_san_mateo"
+)
+
+SITE_NAME = (
+    "Parkside Aquatic Park, San Mateo"
+)
+
 SITE_LAT = 37.5602
 SITE_LON = -122.2910
-TIMEZONE = "America/Los_Angeles"
 
-APP_MODEL_VERSION = "V2.1-LIVE"
+TIMEZONE = (
+    "America/Los_Angeles"
+)
+
+APP_MODEL_VERSION = (
+    "V2.1-LIVE"
+)
+
+
+# ==========================================================
+# BACTERIA THRESHOLDS
+# ==========================================================
 
 BACTERIA_LIMITS = {
     "E. coli": 235.0,
     "Enterococcus": 130.0,
 }
 
+
 DISPLAY_THRESHOLDS = {
     "E. coli": {
         "caution": 0.10,
         "unsafe": 0.50,
     },
+
     "Enterococcus": {
         "caution": 0.40,
         "unsafe": 0.85,
     },
 }
+
 
 DATE_CANDIDATES = [
     "prediction_date",
@@ -60,6 +103,7 @@ DATE_CANDIDATES = [
     "SampleDate",
     "sample_datetime",
 ]
+
 
 ECOLI_VALUE_CANDIDATES = [
     "e_coli",
@@ -71,6 +115,7 @@ ECOLI_VALUE_CANDIDATES = [
     "ecoli_value",
     "e_coli_value",
 ]
+
 
 ENTERO_VALUE_CANDIDATES = [
     "enterococcus",
@@ -84,23 +129,46 @@ ENTERO_VALUE_CANDIDATES = [
 
 
 # ==========================================================
-# BASIC RISK HELPERS
+# RISK HELPERS
 # ==========================================================
 
-def risk_level(bacteria, probability):
-    probability = float(probability)
-    thresholds = DISPLAY_THRESHOLDS[bacteria]
+def risk_level(
+    bacteria,
+    probability,
+):
+    probability = float(
+        probability
+    )
 
-    if probability < thresholds["caution"]:
+    thresholds = (
+        DISPLAY_THRESHOLDS[
+            bacteria
+        ]
+    )
+
+    if (
+        probability
+        < thresholds[
+            "caution"
+        ]
+    ):
         return "Safe"
 
-    if probability < thresholds["unsafe"]:
+    if (
+        probability
+        < thresholds[
+            "unsafe"
+        ]
+    ):
         return "Caution"
 
     return "Unsafe"
 
 
-def overall_risk(e_coli_risk, enterococcus_risk):
+def overall_risk(
+    e_coli_risk,
+    enterococcus_risk,
+):
     rank = {
         "Safe": 0,
         "Caution": 1,
@@ -108,13 +176,17 @@ def overall_risk(e_coli_risk, enterococcus_risk):
     }
 
     return max(
-        [e_coli_risk, enterococcus_risk],
-        key=lambda value: rank[value],
+        [
+            e_coli_risk,
+            enterococcus_risk,
+        ],
+        key=lambda value:
+            rank[value],
     )
 
 
 # ==========================================================
-# GENERAL FILE / COLUMN HELPERS
+# COLUMN HELPERS
 # ==========================================================
 
 def _normalized(text):
@@ -125,23 +197,35 @@ def _normalized(text):
     )
 
 
-def _find_column(columns, candidates):
-    columns = list(columns)
+def _find_column(
+    columns,
+    candidates,
+):
+    columns = list(
+        columns
+    )
 
     for candidate in candidates:
         if candidate in columns:
             return candidate
 
     normalized_lookup = {
-        _normalized(column): column
+        _normalized(column):
+            column
         for column in columns
     }
 
     for candidate in candidates:
-        key = _normalized(candidate)
+        key = _normalized(
+            candidate
+        )
 
         if key in normalized_lookup:
-            return normalized_lookup[key]
+            return (
+                normalized_lookup[
+                    key
+                ]
+            )
 
     return None
 
@@ -154,13 +238,17 @@ def _date_column(df):
 
     if column is None:
         raise RuntimeError(
-            "Could not find a date column in the AquaCast dataset."
+            "Could not find a date "
+            "column in the AquaCast dataset."
         )
 
     return column
 
 
-def _bacteria_value_column(df, bacteria):
+def _bacteria_value_column(
+    df,
+    bacteria,
+):
     candidates = (
         ECOLI_VALUE_CANDIDATES
         if bacteria == "E. coli"
@@ -174,39 +262,61 @@ def _bacteria_value_column(df, bacteria):
 
 
 # ==========================================================
-# DATASET
+# LOAD DATASET
 # ==========================================================
 
-@st.cache_data(show_spinner=False)
+@st.cache_data(
+    show_spinner=False
+)
 def _load_dataset():
     if not DATA_PATH.exists():
         raise FileNotFoundError(
-            f"Dataset not found: {DATA_PATH}"
+            f"Dataset not found: "
+            f"{DATA_PATH}"
         )
 
-    df = pd.read_csv(DATA_PATH)
+    df = pd.read_csv(
+        DATA_PATH
+    )
 
-    date_col = _date_column(df)
+    date_col = _date_column(
+        df
+    )
 
-    df[date_col] = pd.to_datetime(
-        df[date_col],
+    df[
+        date_col
+    ] = pd.to_datetime(
+        df[
+            date_col
+        ],
         errors="coerce",
     )
 
     df = (
-        df.dropna(subset=[date_col])
-        .sort_values(date_col)
-        .reset_index(drop=True)
+        df
+        .dropna(
+            subset=[
+                date_col
+            ]
+        )
+        .sort_values(
+            date_col
+        )
+        .reset_index(
+            drop=True
+        )
     )
 
     return df
 
 
 # ==========================================================
-# MODEL MANIFEST / MODEL LOADING
+# MODEL MANIFEST
 # ==========================================================
 
-@st.cache_data(show_spinner=False)
+@st.cache_data(
+    show_spinner=False
+)
 def _load_manifest():
     if not MANIFEST.exists():
         return {}
@@ -216,26 +326,41 @@ def _load_manifest():
             "r",
             encoding="utf-8",
         ) as handle:
-            return json.load(handle)
+
+            return json.load(
+                handle
+            )
 
     except Exception:
         return {}
 
 
-def _manifest_bacteria_entry(manifest, bacteria):
-    if not isinstance(manifest, dict):
+def _manifest_bacteria_entry(
+    manifest,
+    bacteria,
+):
+    if not isinstance(
+        manifest,
+        dict,
+    ):
         return {}
 
     target_keys = {
-        _normalized(bacteria),
+        _normalized(
+            bacteria
+        ),
+
         _normalized(
             "ecoli"
-            if bacteria == "E. coli"
+            if bacteria
+            == "E. coli"
             else "enterococcus"
         ),
     }
 
-    containers = [manifest]
+    containers = [
+        manifest
+    ]
 
     for key in [
         "models",
@@ -243,29 +368,53 @@ def _manifest_bacteria_entry(manifest, bacteria):
         "bacteria",
         "model_artifacts",
     ]:
-        value = manifest.get(key)
+        value = manifest.get(
+            key
+        )
 
-        if isinstance(value, dict):
-            containers.append(value)
+        if isinstance(
+            value,
+            dict,
+        ):
+            containers.append(
+                value
+            )
 
     for container in containers:
-        for key, value in container.items():
+        for key, value in (
+            container.items()
+        ):
 
-            if _normalized(key) in target_keys:
+            if (
+                _normalized(key)
+                in target_keys
+            ):
 
-                if isinstance(value, dict):
+                if isinstance(
+                    value,
+                    dict,
+                ):
                     return value
 
-                if isinstance(value, str):
+                if isinstance(
+                    value,
+                    str,
+                ):
                     return {
-                        "model_file": value
+                        "model_file":
+                            value
                     }
 
     return {}
 
 
-def _extract_feature_list(entry):
-    if not isinstance(entry, dict):
+def _extract_feature_list(
+    entry
+):
+    if not isinstance(
+        entry,
+        dict,
+    ):
         return []
 
     for key in [
@@ -275,19 +424,30 @@ def _extract_feature_list(entry):
         "selected_features",
         "input_features",
     ]:
-        value = entry.get(key)
+        value = entry.get(
+            key
+        )
 
-        if isinstance(value, list):
+        if isinstance(
+            value,
+            list,
+        ):
             return [
                 str(item)
-                for item in value
+                for item
+                in value
             ]
 
     return []
 
 
-def _extract_model_file(entry):
-    if not isinstance(entry, dict):
+def _extract_model_file(
+    entry
+):
+    if not isinstance(
+        entry,
+        dict,
+    ):
         return None
 
     for key in [
@@ -298,10 +458,15 @@ def _extract_model_file(entry):
         "file",
         "path",
     ]:
-        value = entry.get(key)
+        value = entry.get(
+            key
+        )
 
         if (
-            isinstance(value, str)
+            isinstance(
+                value,
+                str,
+            )
             and value.strip()
         ):
             return value.strip()
@@ -309,7 +474,9 @@ def _extract_model_file(entry):
     return None
 
 
-def _search_model_file(bacteria):
+def _search_model_file(
+    bacteria
+):
     if not MODEL_DIR.exists():
         return None
 
@@ -328,25 +495,34 @@ def _search_model_file(bacteria):
 
     candidates = []
 
-    for path in MODEL_DIR.rglob("*"):
-
+    for path in (
+        MODEL_DIR.rglob("*")
+    ):
         if not path.is_file():
             continue
 
-        if path.suffix.lower() not in {
-            ".joblib",
-            ".pkl",
-            ".pickle",
-        }:
+        if (
+            path.suffix.lower()
+            not in {
+                ".joblib",
+                ".pkl",
+                ".pickle",
+            }
+        ):
             continue
 
-        name = path.name.lower()
+        name = (
+            path.name.lower()
+        )
 
         if any(
             token in name
-            for token in target_tokens
+            for token
+            in target_tokens
         ):
-            candidates.append(path)
+            candidates.append(
+                path
+            )
 
     if not candidates:
         return None
@@ -355,24 +531,36 @@ def _search_model_file(bacteria):
         key=lambda path: (
             "model"
             not in path.name.lower(),
-            len(path.name),
+            len(
+                path.name
+            ),
         )
     )
 
     return candidates[0]
 
 
-@st.cache_resource(show_spinner=False)
-def _load_model_and_features(bacteria):
-    manifest = _load_manifest()
-
-    entry = _manifest_bacteria_entry(
-        manifest,
-        bacteria,
+@st.cache_resource(
+    show_spinner=False
+)
+def _load_model_and_features(
+    bacteria
+):
+    manifest = (
+        _load_manifest()
     )
 
-    model_file = _extract_model_file(
-        entry
+    entry = (
+        _manifest_bacteria_entry(
+            manifest,
+            bacteria,
+        )
+    )
+
+    model_file = (
+        _extract_model_file(
+            entry
+        )
     )
 
     model_path = None
@@ -383,36 +571,50 @@ def _load_model_and_features(bacteria):
         )
 
         if not candidate.is_absolute():
-            direct = ROOT / candidate
+            direct = (
+                ROOT
+                / candidate
+            )
+
             inside_models = (
-                MODEL_DIR / candidate
+                MODEL_DIR
+                / candidate
             )
 
             if direct.exists():
                 candidate = direct
 
-            elif inside_models.exists():
-                candidate = inside_models
+            elif (
+                inside_models.exists()
+            ):
+                candidate = (
+                    inside_models
+                )
 
         if candidate.exists():
             model_path = candidate
 
     if model_path is None:
-        model_path = _search_model_file(
-            bacteria
+        model_path = (
+            _search_model_file(
+                bacteria
+            )
         )
 
     if model_path is None:
         raise FileNotFoundError(
-            f"Could not locate the saved {bacteria} model."
+            "Could not locate the saved "
+            f"{bacteria} model."
         )
 
     model = joblib.load(
         model_path
     )
 
-    features = _extract_feature_list(
-        entry
+    features = (
+        _extract_feature_list(
+            entry
+        )
     )
 
     if (
@@ -430,20 +632,27 @@ def _load_model_and_features(bacteria):
 
     if not features:
         raise RuntimeError(
-            "Could not determine the feature "
-            f"order for the {bacteria} model."
+            "Could not determine the "
+            "feature order for the "
+            f"{bacteria} model."
         )
 
-    return model, features
+    return (
+        model,
+        features,
+    )
 
 
 def _model_version():
-    manifest = _load_manifest()
+    manifest = (
+        _load_manifest()
+    )
 
     if isinstance(
         manifest,
         dict,
     ):
+
         for key in [
             "model_version",
             "version",
@@ -457,7 +666,9 @@ def _model_version():
                 None,
                 "",
             ]:
-                return str(value)
+                return str(
+                    value
+                )
 
     return APP_MODEL_VERSION
 
@@ -472,34 +683,47 @@ def _model_version():
 )
 def _fetch_weather():
     params = {
-        "latitude": SITE_LAT,
-        "longitude": SITE_LON,
-        "daily": (
-            "precipitation_sum,"
-            "temperature_2m_mean"
-        ),
-        "timezone": TIMEZONE,
+        "latitude":
+            SITE_LAT,
 
-        # 45 days gives enough history
-        # for the 30-day trends page.
-        "past_days": 45,
+        "longitude":
+            SITE_LON,
 
-        "forecast_days": 7,
+        "daily":
+            (
+                "precipitation_sum,"
+                "temperature_2m_mean"
+            ),
+
+        "timezone":
+            TIMEZONE,
+
+        # Gives enough history
+        # for Recent Trends.
+        "past_days":
+            45,
+
+        # TODAY + NEXT 7 DAYS
+        "forecast_days":
+            8,
     }
 
     url = (
-        "https://api.open-meteo.com/v1/forecast?"
+        "https://api.open-meteo.com/"
+        "v1/forecast?"
         + urllib.parse.urlencode(
             params
         )
     )
 
-    request = urllib.request.Request(
-        url,
-        headers={
-            "User-Agent":
-                "BeachGuard-AquaCast/2.1"
-        },
+    request = (
+        urllib.request.Request(
+            url,
+            headers={
+                "User-Agent":
+                    "BeachGuard-AquaCast/2.1"
+            },
+        )
     )
 
     with urllib.request.urlopen(
@@ -508,8 +732,11 @@ def _fetch_weather():
     ) as response:
 
         payload = json.loads(
-            response.read()
-            .decode("utf-8")
+            response
+            .read()
+            .decode(
+                "utf-8"
+            )
         )
 
     daily = payload.get(
@@ -534,7 +761,8 @@ def _fetch_weather():
 
     if not dates:
         raise RuntimeError(
-            "Open-Meteo returned no daily weather data."
+            "Open-Meteo returned no "
+            "daily weather data."
         )
 
     weather = pd.DataFrame(
@@ -562,7 +790,9 @@ def _fetch_weather():
     weather = (
         weather
         .dropna(
-            subset=["date"]
+            subset=[
+                "date"
+            ]
         )
         .sort_values(
             "date"
@@ -578,8 +808,12 @@ def _fetch_weather():
         weather[
             "precipitation_sum"
         ]
-        .fillna(0.0)
-        .clip(lower=0.0)
+        .fillna(
+            0.0
+        )
+        .clip(
+            lower=0.0
+        )
     )
 
     weather[
@@ -596,6 +830,10 @@ def _fetch_weather():
     return weather
 
 
+# ==========================================================
+# WEATHER FEATURE ENGINEERING
+# ==========================================================
+
 def _antecedent_dry_days(
     rain_series
 ):
@@ -604,12 +842,16 @@ def _antecedent_dry_days(
 
     for rain in (
         rain_series
-        .fillna(0.0)
+        .fillna(
+            0.0
+        )
     ):
 
         if float(rain) > 0.0:
             values.append(
-                float(dry_days)
+                float(
+                    dry_days
+                )
             )
 
             dry_days = 0
@@ -618,7 +860,9 @@ def _antecedent_dry_days(
             dry_days += 1
 
             values.append(
-                float(dry_days)
+                float(
+                    dry_days
+                )
             )
 
     return pd.Series(
@@ -637,14 +881,18 @@ def _engineer_weather_features(
         df[
             "precipitation_sum"
         ]
-        .astype(float)
+        .astype(
+            float
+        )
     )
 
     temp = (
         df[
             "temperature_2m_mean"
         ]
-        .astype(float)
+        .astype(
+            float
+        )
     )
 
     df[
@@ -675,15 +923,23 @@ def _engineer_weather_features(
     df[
         "rain_1day_lag1"
     ] = (
-        rain.shift(1)
-        .fillna(0.0)
+        rain.shift(
+            1
+        )
+        .fillna(
+            0.0
+        )
     )
 
     df[
         "rain_1day_lag2"
     ] = (
-        rain.shift(2)
-        .fillna(0.0)
+        rain.shift(
+            2
+        )
+        .fillna(
+            0.0
+        )
     )
 
     df[
@@ -732,8 +988,12 @@ def _engineer_weather_features(
     df[
         "rain_days_3day"
     ] = (
-        rain.gt(0)
-        .astype(int)
+        rain.gt(
+            0
+        )
+        .astype(
+            int
+        )
         .rolling(
             3,
             min_periods=1,
@@ -744,8 +1004,12 @@ def _engineer_weather_features(
     df[
         "rain_days_7day"
     ] = (
-        rain.gt(0)
-        .astype(int)
+        rain.gt(
+            0
+        )
+        .astype(
+            int
+        )
         .rolling(
             7,
             min_periods=1,
@@ -755,8 +1019,10 @@ def _engineer_weather_features(
 
     df[
         "adp_days"
-    ] = _antecedent_dry_days(
-        rain
+    ] = (
+        _antecedent_dry_days(
+            rain
+        )
     )
 
     df[
@@ -799,14 +1065,18 @@ def _engineer_weather_features(
         "month"
     ] = (
         df.index.month
-        .astype(float)
+        .astype(
+            float
+        )
     )
 
     df[
         "day_of_year"
     ] = (
         df.index.dayofyear
-        .astype(float)
+        .astype(
+            float
+        )
     )
 
     df[
@@ -864,7 +1134,9 @@ def _engineer_weather_features(
                 3,
             ]
         )
-    ).astype(float)
+    ).astype(
+        float
+    )
 
     df[
         "rain_temp_interaction"
@@ -892,15 +1164,17 @@ def _engineer_weather_features(
 
 
 # ==========================================================
-# FEATURE CONSTRUCTION
+# HISTORICAL FEATURE HELPERS
 # ==========================================================
 
 def _latest_dataset_row(
     dataset,
     target_date,
 ):
-    date_col = _date_column(
-        dataset
+    date_col = (
+        _date_column(
+            dataset
+        )
     )
 
     target_date = (
@@ -926,7 +1200,9 @@ def _latest_dataset_row(
             dtype=float
         )
 
-    return prior.iloc[-1]
+    return (
+        prior.iloc[-1]
+    )
 
 
 def _latest_lab_value(
@@ -934,8 +1210,10 @@ def _latest_lab_value(
     bacteria,
     target_date,
 ):
-    date_col = _date_column(
-        dataset
+    date_col = (
+        _date_column(
+            dataset
+        )
     )
 
     value_col = (
@@ -948,20 +1226,23 @@ def _latest_lab_value(
     if value_col is None:
         return np.nan
 
-    subset = dataset[
+    subset = (
         dataset[
-            date_col
+            dataset[
+                date_col
+            ]
+            .dt.normalize()
+            <= pd.Timestamp(
+                target_date
+            ).normalize()
+        ][
+            [
+                date_col,
+                value_col,
+            ]
         ]
-        .dt.normalize()
-        <= pd.Timestamp(
-            target_date
-        ).normalize()
-    ][
-        [
-            date_col,
-            value_col,
-        ]
-    ].copy()
+        .copy()
+    )
 
     subset[
         value_col
@@ -992,16 +1273,20 @@ def _history_feature_values(
     dataset,
     target_date,
 ):
-    ecoli = _latest_lab_value(
-        dataset,
-        "E. coli",
-        target_date,
+    ecoli = (
+        _latest_lab_value(
+            dataset,
+            "E. coli",
+            target_date,
+        )
     )
 
-    entero = _latest_lab_value(
-        dataset,
-        "Enterococcus",
-        target_date,
+    entero = (
+        _latest_lab_value(
+            dataset,
+            "Enterococcus",
+            target_date,
+        )
     )
 
     ecoli_exceed = (
@@ -1111,7 +1396,9 @@ def _safe_numeric(
 ):
     numeric = pd.to_numeric(
         pd.Series(
-            [value]
+            [
+                value
+            ]
         ),
         errors="coerce",
     ).iloc[0]
@@ -1141,15 +1428,20 @@ def _build_feature_row(
         .normalize()
     )
 
-    if target_date not in weather.index:
+    if (
+        target_date
+        not in weather.index
+    ):
         raise RuntimeError(
             "Weather data are unavailable "
             f"for {target_date.date()}."
         )
 
-    weather_row = weather.loc[
-        target_date
-    ]
+    weather_row = (
+        weather.loc[
+            target_date
+        ]
+    )
 
     if isinstance(
         weather_row,
@@ -1197,7 +1489,6 @@ def _build_feature_row(
     row = {}
 
     for feature in features:
-
         key = _normalized(
             feature
         )
@@ -1265,7 +1556,9 @@ def _build_feature_row(
         )
 
     return pd.DataFrame(
-        [row],
+        [
+            row
+        ],
         columns=features,
     )
 
@@ -1288,9 +1581,14 @@ def _positive_probability(
             )
         )
 
-        if probabilities.ndim == 1:
+        if (
+            probabilities.ndim
+            == 1
+        ):
             return float(
-                probabilities[0]
+                probabilities[
+                    0
+                ]
             )
 
         if (
@@ -1352,14 +1650,18 @@ def _positive_probability(
             model.decision_function(
                 X
             )
-        ).reshape(-1)[0]
+        ).reshape(
+            -1
+        )[0]
 
         return float(
             1.0
             / (
                 1.0
                 + math.exp(
-                    -float(score)
+                    -float(
+                        score
+                    )
                 )
             )
         )
@@ -1368,7 +1670,9 @@ def _positive_probability(
         model.predict(
             X
         )
-    ).reshape(-1)[0]
+    ).reshape(
+        -1
+    )[0]
 
     return float(
         np.clip(
@@ -1389,11 +1693,13 @@ def _predict_bacteria(
     weather,
     dataset,
 ):
-    X = _build_feature_row(
-        features,
-        target_date,
-        weather,
-        dataset,
+    X = (
+        _build_feature_row(
+            features,
+            target_date,
+            weather,
+            dataset,
+        )
     )
 
     probability = (
@@ -1429,7 +1735,7 @@ def _predict_bacteria(
 
 
 # ==========================================================
-# LIVE FORECAST OUTPUT
+# LIVE OUTLOOK
 # ==========================================================
 
 @st.cache_data(
@@ -1439,11 +1745,15 @@ def _predict_bacteria(
 def load_live_outlook(
     days=3
 ):
+    # Allows:
+    # today + next 7 days
     days = max(
         1,
         min(
-            int(days),
-            7,
+            int(
+                days
+            ),
+            8,
         ),
     )
 
@@ -1460,22 +1770,28 @@ def load_live_outlook(
     (
         ecoli_model,
         ecoli_features,
-    ) = _load_model_and_features(
-        "E. coli"
+    ) = (
+        _load_model_and_features(
+            "E. coli"
+        )
     )
 
     (
         entero_model,
         entero_features,
-    ) = _load_model_and_features(
-        "Enterococcus"
+    ) = (
+        _load_model_and_features(
+            "Enterococcus"
+        )
     )
 
     today = (
         pd.Timestamp.now(
             tz=TIMEZONE
         )
-        .tz_localize(None)
+        .tz_localize(
+            None
+        )
         .normalize()
     )
 
@@ -1527,14 +1843,18 @@ def load_live_outlook(
             dataset,
         )
 
-        ecoli_risk = risk_level(
-            "E. coli",
-            ecoli_probability,
+        ecoli_risk = (
+            risk_level(
+                "E. coli",
+                ecoli_probability,
+            )
         )
 
-        entero_risk = risk_level(
-            "Enterococcus",
-            entero_probability,
+        entero_risk = (
+            risk_level(
+                "Enterococcus",
+                entero_probability,
+            )
         )
 
         rows.append(
@@ -1606,6 +1926,10 @@ def load_live_outlook(
     )
 
 
+# ==========================================================
+# TODAY'S LIVE FORECAST
+# ==========================================================
+
 @st.cache_data(
     ttl=1800,
     show_spinner=False,
@@ -1619,18 +1943,19 @@ def load_live_latest():
 
     if outlook.empty:
         raise RuntimeError(
-            "No live AquaCast prediction is available."
+            "No live AquaCast "
+            "prediction is available."
         )
 
     return (
-        outlook.iloc[0]
+        outlook
+        .iloc[0]
         .copy()
     )
 
 
 # ==========================================================
-# RECENT MODEL-ESTIMATE HISTORY
-# Used by Recent Trends page
+# RECENT MODEL ESTIMATES
 # ==========================================================
 
 @st.cache_data(
@@ -1643,7 +1968,9 @@ def load_recent_estimates(
     days = max(
         7,
         min(
-            int(days),
+            int(
+                days
+            ),
             30,
         ),
     )
@@ -1661,22 +1988,28 @@ def load_recent_estimates(
     (
         ecoli_model,
         ecoli_features,
-    ) = _load_model_and_features(
-        "E. coli"
+    ) = (
+        _load_model_and_features(
+            "E. coli"
+        )
     )
 
     (
         entero_model,
         entero_features,
-    ) = _load_model_and_features(
-        "Enterococcus"
+    ) = (
+        _load_model_and_features(
+            "Enterococcus"
+        )
     )
 
     today = (
         pd.Timestamp.now(
             tz=TIMEZONE
         )
-        .tz_localize(None)
+        .tz_localize(
+            None
+        )
         .normalize()
     )
 
