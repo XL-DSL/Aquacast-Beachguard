@@ -48,7 +48,6 @@ def interpretation(risk):
 
 
 def freshness_chip(updated_date):
-
     updated = pd.to_datetime(
         updated_date,
         errors="coerce",
@@ -77,13 +76,13 @@ def freshness_chip(updated_date):
         text = "Updated yesterday"
         css_class = "current"
 
-    elif days_old <= 3:
+    elif days_old <= 7:
         text = f"Updated {days_old} days ago"
         css_class = "warn"
 
     else:
         text = (
-            "Last updated "
+            "Outdated · Last updated "
             + updated.strftime("%b %d, %Y")
         )
         css_class = "stale"
@@ -101,7 +100,6 @@ def probability_meter(
     unsafe_threshold,
     risk,
 ):
-
     probability = max(
         0.0,
         min(
@@ -170,7 +168,6 @@ def probability_meter(
 
 
 def render_footer(model_version=None):
-
     version_html = ""
 
     if model_version:
