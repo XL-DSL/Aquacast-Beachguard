@@ -2,7 +2,7 @@ import pandas as pd
 import streamlit as st
 
 from utils.live_forecast import load_live_latest
-from utils.styles import apply_styles
+from utils.styles import apply_styles, load_latest
 from utils.ui import (
     OFFICIAL_URL,
     SITE_NAME,
@@ -12,10 +12,6 @@ from utils.ui import (
     render_footer,
     risk_class,
     risk_icon,
-)
-from utils.validation import (
-    load_valid_latest,
-    validate_prediction_row,
 )
 
 
@@ -33,13 +29,6 @@ SITE_LAT = 37.5602
 SITE_LON = -122.2910
 
 
-# ==========================================================
-# LOAD CURRENT PREDICTION
-# Try live forecast first.
-# If live forecasting fails, use the latest validated saved
-# prediction instead.
-# ==========================================================
-
 live_prediction = True
 live_error = None
 
@@ -51,7 +40,7 @@ except Exception as exc:
     live_error = exc
 
     try:
-        latest = load_valid_latest()
+        latest = load_latest()
 
     except Exception:
         st.html(
@@ -67,9 +56,9 @@ except Exception as exc:
     </h2>
 
     <p>
-        AquaCast cannot retrieve a valid forecast
+        AquaCast cannot retrieve the latest forecast
         right now. Please check the official
-        San Mateo County water-quality advisory.
+        San Mateo County advisory.
     </p>
 
     <a
@@ -86,40 +75,6 @@ except Exception as exc:
 
         st.stop()
 
-
-# ==========================================================
-# VALIDATE PREDICTION BEFORE DISPLAYING IT
-# ==========================================================
-
-validation = validate_prediction_row(
-    latest
-)
-
-if not validation["valid"]:
-    st.error(
-        "Prediction currently unavailable. "
-        "The latest forecast did not pass "
-        "data validation."
-    )
-
-    st.link_button(
-        "Check Official Water-Quality Advisories",
-        OFFICIAL_URL,
-    )
-
-    st.stop()
-
-
-if validation["stale"]:
-    st.warning(
-        "This prediction is more than 7 days old "
-        "and may no longer represent current conditions."
-    )
-
-
-# ==========================================================
-# PREPARE DISPLAY VALUES
-# ==========================================================
 
 prediction_date = pd.to_datetime(
     latest["prediction_date"],
@@ -192,13 +147,9 @@ freshness = freshness_chip(
 source_text = (
     "Live weather-based AquaCast forecast"
     if live_prediction
-    else "Latest validated saved AquaCast forecast"
+    else "Latest saved AquaCast forecast"
 )
 
-
-# ==========================================================
-# HERO / CURRENT FORECAST
-# ==========================================================
 
 st.html(
     f"""
@@ -211,13 +162,11 @@ st.html(
         </div>
 
         <div class="bg-home-meta">
-
             <span>
                 Forecast for {prediction_text}
             </span>
 
             {freshness}
-
         </div>
 
         <div class="bg-home-status">
@@ -255,11 +204,6 @@ st.html(
 )
 
 
-# ==========================================================
-# FALLBACK NOTICE
-# Only appears when the live forecast failed.
-# ==========================================================
-
 if not live_prediction:
     st.html(
         """
@@ -267,18 +211,13 @@ if not live_prediction:
 
     <div class="bg-inline-notice">
         Live weather input is temporarily unavailable.
-        Showing the latest validated saved
-        AquaCast prediction.
+        Showing the latest saved AquaCast prediction.
     </div>
 
 </div>
 """
     )
 
-
-# ==========================================================
-# BACTERIA PROBABILITY METERS
-# ==========================================================
 
 ecoli_meter = probability_meter(
     ecoli_prob,
@@ -295,10 +234,6 @@ entero_meter = probability_meter(
 )
 
 
-# ==========================================================
-# WATER QUALITY RISK CARDS
-# ==========================================================
-
 st.html(
     f"""
 <div class="bg-home-shell">
@@ -306,7 +241,6 @@ st.html(
     <div class="bg-section-title-row">
 
         <div>
-
             <h2 class="bg-section-title">
                 Water Quality Risk
             </h2>
@@ -316,7 +250,6 @@ st.html(
                 levels exceed the model's
                 elevated-risk concentration threshold.
             </p>
-
         </div>
 
     </div>
@@ -412,10 +345,6 @@ st.html(
 )
 
 
-# ==========================================================
-# PILOT SITE
-# ==========================================================
-
 st.html(
     f"""
 <div class="bg-home-shell">
@@ -442,10 +371,6 @@ st.html(
 """
 )
 
-
-# ==========================================================
-# MAP
-# ==========================================================
 
 map_left, map_center, map_right = st.columns(
     [1, 10, 1]
@@ -478,12 +403,14 @@ with map_center:
         )
 
         with map_col1:
+
             st.caption(
                 f"📍 {SITE_NAME} · "
                 f"{source_text}"
             )
 
         with map_col2:
+
             st.link_button(
                 "Open larger map",
                 (
@@ -495,35 +422,22 @@ with map_center:
             )
 
 
-# ==========================================================
-# SAFETY NOTICE
-# ==========================================================
-
 st.html(
     """
 <div class="bg-home-shell">
 
     <div class="bg-support-note">
-
-        <strong>
-            Important:
-        </strong>
-
+        <strong>Important:</strong>
         BeachGuard is an experimental decision-support
         forecast. It does not directly measure bacteria
         and does not replace official laboratory results,
         advisories, or closures.
-
     </div>
 
 </div>
 """
 )
 
-
-# ==========================================================
-# FOOTER
-# ==========================================================
 
 render_footer(
     model_ver
