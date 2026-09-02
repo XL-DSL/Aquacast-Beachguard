@@ -1821,3 +1821,68 @@ div[data-testid="stLinkButton"] a {
     }
 
 }
+/* ==========================================================
+   GLOBAL METRIC CARD FIX
+   Applies to all st.metric() cards on every page
+   ========================================================== */
+
+[data-testid="stMetric"] {
+    background: #FFFFFF !important;
+    border: 1px solid #E4E7EC !important;
+    border-radius: 14px !important;
+    padding: 1rem 1.1rem !important;
+
+    box-shadow:
+        0 1px 4px rgba(16, 24, 40, 0.05) !important;
+}
+
+
+/* Metric label: Live Forecast, Current Validation, etc. */
+[data-testid="stMetricLabel"],
+[data-testid="stMetricLabel"] p,
+[data-testid="stMetricLabel"] span,
+[data-testid="stMetricLabel"] div {
+    color: #667085 !important;
+
+    font-size: 0.78rem !important;
+    font-weight: 600 !important;
+
+    opacity: 1 !important;
+}
+
+
+/* Main metric value: Available, Pass, V2.1-LIVE, etc. */
+[data-testid="stMetricValue"],
+[data-testid="stMetricValue"] div,
+[data-testid="stMetricValue"] span {
+    color: #172033 !important;
+
+    font-weight: 700 !important;
+
+    opacity: 1 !important;
+}
+
+
+/* Metric delta, if we ever use one */
+[data-testid="stMetricDelta"],
+[data-testid="stMetricDelta"] div,
+[data-testid="stMetricDelta"] span {
+    opacity: 1 !important;
+}
+
+
+/* Make four-card rows look balanced */
+[data-testid="stMetric"] {
+    min-height: 105px !important;
+}
+
+
+/* Mobile */
+@media (max-width: 640px) {
+
+    [data-testid="stMetric"] {
+        min-height: auto !important;
+        padding: 0.9rem !important;
+    }
+
+}
