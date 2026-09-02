@@ -1675,3 +1675,149 @@ div[data-testid="stLinkButton"] a {
     }
 
 }
+/* ==========================================================
+   GLOBAL PAGE LAYOUT FIX
+   Applies automatically to every Streamlit page.
+   ========================================================== */
+
+/* Center every page and stop content from touching screen edges */
+[data-testid="stMainBlockContainer"] {
+    width: 100% !important;
+    max-width: 1120px !important;
+
+    margin-left: auto !important;
+    margin-right: auto !important;
+
+    padding:
+        1.75rem
+        2rem
+        3rem
+        2rem
+        !important;
+}
+
+
+/* Make custom reading wrappers use the available page width.
+   This fixes the Risk Details mismatch where the blue box
+   was narrow but the expanders stretched much wider. */
+.bg-reading {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+
+/* ==========================================================
+   NATIVE STREAMLIT COMPONENTS
+   Give all pages the same card/border treatment.
+   ========================================================== */
+
+
+/* Metric cards */
+[data-testid="stMetric"] {
+    background: #FFFFFF !important;
+
+    border: 1px solid #E4E7EC !important;
+    border-radius: 14px !important;
+
+    padding: 1rem 1.1rem !important;
+
+    box-shadow:
+        0 1px 4px rgba(16, 24, 40, 0.05) !important;
+}
+
+
+/* Expanders — fixes Risk Details technical-detail boxes */
+[data-testid="stExpander"] {
+    background: #FFFFFF !important;
+
+    border: 1px solid #E4E7EC !important;
+    border-radius: 12px !important;
+
+    overflow: hidden !important;
+}
+
+
+/* Dataframes / tables */
+[data-testid="stDataFrame"] {
+    border: 1px solid #E4E7EC !important;
+    border-radius: 12px !important;
+
+    overflow: hidden !important;
+}
+
+
+/* Bordered Streamlit containers */
+[data-testid="stVerticalBlockBorderWrapper"] {
+    border-color: #E4E7EC !important;
+    border-radius: 16px !important;
+
+    background: #FFFFFF !important;
+}
+
+
+/* Warning / info / error boxes */
+[data-testid="stAlert"] {
+    border-radius: 12px !important;
+}
+
+
+/* Link buttons */
+[data-testid="stLinkButton"] a {
+    border-radius: 11px !important;
+
+    min-height: 42px !important;
+}
+
+
+/* ==========================================================
+   GLOBAL TYPOGRAPHY / SPACING
+   ========================================================== */
+
+[data-testid="stMainBlockContainer"] h1 {
+    margin-top: 0 !important;
+}
+
+[data-testid="stMainBlockContainer"] h2 {
+    margin-top: 1.8rem !important;
+}
+
+[data-testid="stMainBlockContainer"] h3 {
+    margin-top: 1.4rem !important;
+}
+
+
+/* ==========================================================
+   MOBILE
+   ========================================================== */
+
+@media (max-width: 640px) {
+
+    [data-testid="stMainBlockContainer"] {
+        width: 100% !important;
+
+        padding:
+            1rem
+            0.85rem
+            2rem
+            0.85rem
+            !important;
+    }
+
+    [data-testid="stMetric"] {
+        padding: 0.85rem !important;
+    }
+
+    [data-testid="stLinkButton"] {
+        width: 100% !important;
+    }
+
+    [data-testid="stLinkButton"] a {
+        width: 100% !important;
+
+        justify-content: center !important;
+    }
+
+}
