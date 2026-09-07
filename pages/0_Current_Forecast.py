@@ -12,19 +12,14 @@ from utils.ui import (
     render_footer,
     risk_class,
     risk_icon,
+    risk_driver_text,
+    successful_generation_text,
 )
 from utils.validation import (
     load_valid_latest,
     validate_prediction_row,
 )
 
-
-st.set_page_config(
-    page_title="BeachGuard | AquaCast Water Quality Forecast",
-    page_icon="🌊",
-    layout="wide",
-    initial_sidebar_state="expanded",
-)
 
 apply_styles()
 
@@ -77,7 +72,7 @@ except Exception as exc:
         href="{OFFICIAL_URL}"
         target="_blank"
     >
-        Check Official Advisories
+        View Official San Mateo County Beach Status
     </a>
 
 </div>
@@ -103,7 +98,7 @@ if not validation["valid"]:
     )
 
     st.link_button(
-        "Check Official Water-Quality Advisories",
+        "View Official San Mateo County Beach Status",
         OFFICIAL_URL,
     )
 
@@ -197,6 +192,21 @@ source_text = (
 
 
 # ==========================================================
+# RISK DRIVER + SUCCESSFUL GENERATION TIME
+# ==========================================================
+
+driver_text = risk_driver_text(
+    ecoli_risk,
+    entero_risk,
+)
+
+generated_text = successful_generation_text(
+    latest,
+    using_live=live_prediction,
+)
+
+
+# ==========================================================
 # HERO / CURRENT FORECAST
 # ==========================================================
 
@@ -245,10 +255,32 @@ st.html(
             href="{OFFICIAL_URL}"
             target="_blank"
         >
-            Check Official Water-Quality Advisories
+            View Official San Mateo County Beach Status
         </a>
 
     </section>
+
+</div>
+"""
+)
+
+
+# ==========================================================
+# RISK DRIVER + FORECAST GENERATION TIME
+# ==========================================================
+
+st.html(
+    f"""
+<div class="bg-forecast-context">
+
+    <div class="bg-risk-driver">
+        {driver_text}
+    </div>
+
+    <div class="bg-generated-time">
+        Last successfully generated:
+        <strong>{generated_text}</strong>
+    </div>
 
 </div>
 """
