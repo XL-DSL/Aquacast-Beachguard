@@ -359,21 +359,70 @@ st.html(
 
 
 /* ----------------------------------------------------------
-   SMALL VIEW BUTTONS
+   TIMELINE VIEW BUTTONS
    ---------------------------------------------------------- */
 
 div[data-testid="stButton"] > button {
     width: 100% !important;
-
     min-height: 34px !important;
 
+    background: #FFFFFF !important;
+    color: #344054 !important;
+
+    border: 1px solid #D0D5DD !important;
     border-radius: 8px !important;
 
     font-size: 0.7rem !important;
+    font-weight: 700 !important;
 
-    padding: 0.25rem 0.4rem !important;
+    padding: 0.3rem 0.5rem !important;
+
+    box-shadow: none !important;
 }
 
+
+/* Make all text/icons inside the button visible */
+
+div[data-testid="stButton"] > button *,
+div[data-testid="stButton"] > button p,
+div[data-testid="stButton"] > button span {
+    color: #344054 !important;
+    opacity: 1 !important;
+}
+
+
+/* Hover */
+
+div[data-testid="stButton"] > button:hover {
+    background: #F0F7F8 !important;
+    color: #0F6B78 !important;
+
+    border-color: #0F6B78 !important;
+}
+
+
+div[data-testid="stButton"] > button:hover *,
+div[data-testid="stButton"] > button:hover p,
+div[data-testid="stButton"] > button:hover span {
+    color: #0F6B78 !important;
+}
+
+
+/* Click / focus */
+
+div[data-testid="stButton"] > button:focus,
+div[data-testid="stButton"] > button:active {
+    background: #E6F4F5 !important;
+    color: #0F6B78 !important;
+
+    border-color: #0F6B78 !important;
+}
+
+
+div[data-testid="stButton"] > button:focus *,
+div[data-testid="stButton"] > button:active * {
+    color: #0F6B78 !important;
+}
 
 /* ----------------------------------------------------------
    FUTURE WARNING
