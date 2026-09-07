@@ -1,168 +1,197 @@
 import streamlit as st
 
 from utils.styles import apply_styles
-from utils.ui import OFFICIAL_URL, render_footer
-
-
-st.set_page_config(
-    page_title="Safety & Data Notes | BeachGuard",
-    page_icon="🌊",
-    layout="wide",
+from utils.ui import (
+    OFFICIAL_URL,
+    render_footer,
 )
+
 
 apply_styles()
 
 
+# ==========================================================
+# HEADER
+# ==========================================================
+
+st.title(
+    "Safety & Data Notes"
+)
+
+st.caption(
+    "How to interpret AquaCast and where its information comes from."
+)
+
+
+# ==========================================================
+# OFFICIAL INFORMATION
+# ==========================================================
+
 st.html(
-    f"""
-<div class="bg-reading">
+    """
+<div style="
+    background:#FFF8CC;
+    color:#5C4A00;
+    border:1px solid #F1E59A;
+    border-radius:12px;
+    padding:1rem 1.1rem;
+    margin-bottom:1.4rem;
+    line-height:1.55;
+">
 
-    <div class="bg-page-heading">
+    <strong>
+        Official information always takes priority.
+    </strong>
 
-        <h1>
-            Safety & Data Notes
-        </h1>
+    <br>
 
-        <p>
-            Important information about how to interpret
-            BeachGuard forecasts.
-        </p>
-
-    </div>
-
-
-    <div class="bg-safety-card">
-
-        <div class="bg-safety-icon">
-            !
-        </div>
-
-        <div>
-
-            <h2>
-                Experimental Forecast
-            </h2>
-
-            <p>
-                BeachGuard / AquaCast is a research
-                prototype. Its risk categories represent
-                model-estimated probabilities and do not
-                constitute an official determination that
-                water is safe or unsafe for recreation.
-            </p>
-
-            <p>
-                AquaCast does not directly measure current
-                bacterial concentrations and should never
-                replace laboratory results, official
-                monitoring, beach closures, or public-health
-                advisories.
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <a
-        class="bg-primary-button full-button"
-        href="{OFFICIAL_URL}"
-        target="_blank"
-    >
-        Check Official Water-Quality Advisories
-    </a>
-
-
-    <div class="bg-notes-grid">
-
-        <div class="bg-notes-card">
-
-            <h2>
-                Forecast Inputs
-            </h2>
-
-            <p>
-                Current forecasts use recent and forecast
-                weather conditions together with the latest
-                available historical monitoring information.
-            </p>
-
-            <p>
-                Some previous-sample variables remain based
-                on the latest valid laboratory observation
-                until a newer result becomes available.
-            </p>
-
-        </div>
-
-
-        <div class="bg-notes-card">
-
-            <h2>
-                Forecast Uncertainty
-            </h2>
-
-            <p>
-                Weather forecasts, particularly rainfall
-                forecasts, can be inaccurate. That
-                uncertainty can affect the resulting
-                AquaCast bacterial-risk estimate.
-            </p>
-
-            <p>
-                Unusual contamination events or conditions
-                outside the historical training range may
-                also reduce model accuracy.
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <div class="bg-data-source-summary">
-
-        <h2>
-            Data Sources
-        </h2>
-
-        <div class="bg-source-badges">
-
-            <span>
-                California Water Boards
-            </span>
-
-            <span>
-                NOAA / NCEI
-            </span>
-
-            <span>
-                Open-Meteo
-            </span>
-
-            <span>
-                San Mateo County Advisories
-            </span>
-
-        </div>
-
-    </div>
-
-
-    <div class="bg-support-note">
-
-        <strong>
-            Official information always takes priority.
-        </strong>
-
-        Laboratory measurements, official advisories,
-        beach closures, and agency notices should be used
-        for final recreational-water decisions.
-
-    </div>
+    BeachGuard is an experimental research prototype.
+    It does not issue government advisories, postings,
+    or closures.
 
 </div>
 """
+)
+
+
+st.link_button(
+    "View Official San Mateo County Beach Status",
+    OFFICIAL_URL,
+    use_container_width=True,
+)
+
+
+# ==========================================================
+# WHAT THE APP DOES
+# ==========================================================
+
+st.subheader(
+    "What the forecast means"
+)
+
+
+st.write(
+    "AquaCast estimates the probability that E. coli or "
+    "Enterococcus concentrations exceed the model's "
+    "elevated-risk concentration threshold. It does not "
+    "predict an exact bacteria concentration."
+)
+
+
+st.write(
+    "Safe, Caution, and Unsafe are AquaCast model "
+    "communication categories. They should not be interpreted "
+    "as official government posting or closure categories."
+)
+
+
+# ==========================================================
+# DATA SOURCES
+# ==========================================================
+
+st.subheader(
+    "Data sources"
+)
+
+
+source1, source2 = st.columns(
+    2
+)
+
+
+with source1:
+
+    st.link_button(
+        "California Water Boards / SWAMP",
+        "https://www.waterboards.ca.gov/water_issues/programs/swamp/",
+        use_container_width=True,
+    )
+
+
+with source2:
+
+    st.link_button(
+        "NOAA NCEI Daily Summaries",
+        "https://www.ncei.noaa.gov/access/search/data-search/daily-summaries",
+        use_container_width=True,
+    )
+
+
+source3, source4 = st.columns(
+    2
+)
+
+
+with source3:
+
+    st.link_button(
+        "Open-Meteo Forecast Weather",
+        "https://open-meteo.com/",
+        use_container_width=True,
+    )
+
+
+with source4:
+
+    st.link_button(
+        "San Mateo County Beach Information",
+        OFFICIAL_URL,
+        use_container_width=True,
+    )
+
+
+# ==========================================================
+# DATA NOTES
+# ==========================================================
+
+with st.expander(
+    "Laboratory bacteria data"
+):
+
+    st.write(
+        "Historical E. coli and Enterococcus observations "
+        "are used to train and evaluate AquaCast. "
+        "Laboratory observations are not continuously available, "
+        "so the live forecast is not a real-time bacteria sensor."
+    )
+
+
+with st.expander(
+    "Weather data"
+):
+
+    st.write(
+        "Historical weather information supports model "
+        "development, while the live application uses "
+        "forecast environmental conditions to estimate "
+        "future bacterial risk."
+    )
+
+
+with st.expander(
+    "Excluded data sources"
+):
+
+    st.write(
+        "Tide variables and sanitary sewer overflow variables "
+        "were evaluated during project development but are not "
+        "included in the selected deployed model configuration."
+    )
+
+
+# ==========================================================
+# PUBLIC SAFETY
+# ==========================================================
+
+st.subheader(
+    "Before entering the water"
+)
+
+
+st.write(
+    "Check current official beach information, follow posted "
+    "signage, and use local public-health guidance. AquaCast "
+    "should be treated as supplemental research information only."
 )
 
 
