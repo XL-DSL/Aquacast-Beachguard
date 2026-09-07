@@ -212,3 +212,147 @@ def render_footer(model_version=None):
 </div>
 """
     )
+# ==========================================================
+# OVERALL-RISK DRIVER
+# ==========================================================
+
+def risk_driver_text(
+    e_coli_risk,
+    enterococcus_risk,
+):
+    rank = {
+        "Safe": 0,
+        "Caution": 1,
+        "Unsafe": 2,
+    }
+
+    e_coli_risk = str(
+        e_coli_risk
+    ).strip()
+
+    enterococcus_risk = str(
+        enterococcus_risk
+    ).strip()
+
+    e_rank = rank.get(
+        e_coli_risk,
+        0,
+    )
+
+    entero_rank = rank.get(
+        enterococcus_risk,
+        0,
+    )
+
+    if e_rank > entero_rank:
+        return (
+            "Overall risk is currently driven "
+            "by the E. coli prediction."
+        )
+
+    if entero_rank > e_rank:
+        return (
+            "Overall risk is currently driven "
+            "by the Enterococcus prediction."
+        )
+
+    if (
+        e_coli_risk == "Safe"
+        and enterococcus_risk == "Safe"
+    ):
+        return (
+            "Both bacteria are currently "
+            "classified as Safe."
+        )
+
+    return (
+        "Both bacteria are currently classified "
+        f"as {e_coli_risk}."
+    )
+
+
+# ==========================================================
+# SUCCESSFUL GENERATION TIME
+# ==========================================================
+
+def successful_generation_text(
+    row=None,
+    using_live=True,
+):
+    pacific_timezone = (
+        "America/Los_Angeles"
+    )
+
+    if using_live:
+        now = pd.Timestamp.now(
+            tz=pacific_timezone
+        )
+
+        return now.strftime(
+            "%b %d, %Y · %-I:%M %p PT"
+        )
+
+    if row is not None:
+
+        for field in [
+            "model_run_timestamp",
+            "generated_at",
+            "data_last_updated",
+        ]:
+
+            try:
+                value = row.get(
+                    field
+                )
+
+            except Exception:
+                value = None
+
+            if value is None:
+                continue
+
+            timestamp = pd.to_datetime(
+                value,
+                errors="coerce",
+            )
+
+            if pd.isna(
+                timestamp
+            ):
+                continue
+
+            try:
+                if timestamp.tzinfo is None:
+                    timestamp = (
+                        timestamp.tz_localize(
+                            pacific_timezone
+                        )
+                    )
+
+                else:
+                    timestamp = (
+                        timestamp.tz_convert(
+                            pacific_timezone
+                        )
+                    )
+
+            except Exception:
+                pass
+
+            if (
+                timestamp.hour == 0
+                and timestamp.minute == 0
+                and timestamp.second == 0
+            ):
+                return (
+                    timestamp.strftime(
+                        "%b %d, %Y"
+                    )
+                    + " · PT"
+                )
+
+            return timestamp.strftime(
+                "%b %d, %Y · %-I:%M %p PT"
+            )
+
+    return "Time unavailable"
