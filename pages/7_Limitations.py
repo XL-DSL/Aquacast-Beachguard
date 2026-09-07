@@ -7,28 +7,224 @@ from utils.ui import (
 )
 
 
-st.set_page_config(
-    page_title="Limitations | BeachGuard",
-    page_icon="🌊",
-    layout="wide",
-)
-
 apply_styles()
 
 
 # ==========================================================
-# PAGE HEADER
+# HEADER
 # ==========================================================
 
-st.title("Limitations")
+st.title(
+    "Limitations"
+)
 
 st.caption(
-    "Important limitations of BeachGuard / AquaCast."
+    "Important boundaries on how AquaCast should be interpreted."
 )
 
 
 # ==========================================================
-# EXPERIMENTAL STATUS
+# THREE MAIN LIMITATIONS
+# ==========================================================
+
+card1, card2, card3 = st.columns(
+    3
+)
+
+
+with card1:
+
+    st.html(
+        """
+<div style="
+    background:#FFFFFF;
+    border:1px solid #E4E7EC;
+    border-top:4px solid #B26A00;
+    border-radius:14px;
+    padding:1rem;
+    min-height:150px;
+">
+
+    <div style="
+        color:#172033;
+        font-size:0.95rem;
+        font-weight:800;
+    ">
+        Experimental, not official
+    </div>
+
+    <div style="
+        color:#667085;
+        font-size:0.78rem;
+        line-height:1.5;
+        margin-top:0.45rem;
+    ">
+        AquaCast is a research prototype and does
+        not issue government advisories or closures.
+    </div>
+
+</div>
+"""
+    )
+
+
+with card2:
+
+    st.html(
+        """
+<div style="
+    background:#FFFFFF;
+    border:1px solid #E4E7EC;
+    border-top:4px solid #0F6B78;
+    border-radius:14px;
+    padding:1rem;
+    min-height:150px;
+">
+
+    <div style="
+        color:#172033;
+        font-size:0.95rem;
+        font-weight:800;
+    ">
+        One pilot site
+    </div>
+
+    <div style="
+        color:#667085;
+        font-size:0.78rem;
+        line-height:1.5;
+        margin-top:0.45rem;
+    ">
+        The current model was developed for Parkside
+        Aquatic Park and should not automatically be
+        assumed to perform the same way elsewhere.
+    </div>
+
+</div>
+"""
+    )
+
+
+with card3:
+
+    st.html(
+        """
+<div style="
+    background:#FFFFFF;
+    border:1px solid #E4E7EC;
+    border-top:4px solid #667085;
+    border-radius:14px;
+    padding:1rem;
+    min-height:150px;
+">
+
+    <div style="
+        color:#172033;
+        font-size:0.95rem;
+        font-weight:800;
+    ">
+        Not a real-time sensor
+    </div>
+
+    <div style="
+        color:#667085;
+        font-size:0.78rem;
+        line-height:1.5;
+        margin-top:0.45rem;
+    ">
+        AquaCast estimates risk from environmental
+        information. It does not continuously measure
+        bacteria in the water.
+    </div>
+
+</div>
+"""
+    )
+
+
+# ==========================================================
+# DETAILS
+# ==========================================================
+
+st.subheader(
+    "More detail"
+)
+
+
+with st.expander(
+    "Model limitations"
+):
+
+    st.write(
+        "AquaCast learns statistical relationships from historical "
+        "observations. Those relationships may change over time, "
+        "and conditions outside the historical range may produce "
+        "less reliable predictions."
+    )
+
+    st.write(
+        "E. coli and Enterococcus are modeled separately and "
+        "their predictive performance is not identical."
+    )
+
+
+with st.expander(
+    "Data limitations"
+):
+
+    st.write(
+        "The amount and timing of available laboratory sampling "
+        "limit what the model can learn. Missing observations and "
+        "unequal numbers of elevated-risk events can also affect "
+        "performance."
+    )
+
+    st.write(
+        "Enterococcus has fewer elevated-risk examples in the "
+        "available data, which makes that prediction task "
+        "particularly difficult."
+    )
+
+
+with st.expander(
+    "Weather uncertainty"
+):
+
+    st.write(
+        "Future AquaCast predictions depend partly on forecast "
+        "environmental conditions. Rainfall and temperature "
+        "forecasts can change, so AquaCast uncertainty generally "
+        "increases farther into the future."
+    )
+
+
+with st.expander(
+    "Laboratory-data limitations"
+):
+
+    st.write(
+        "The live system does not receive a new bacteria sample "
+        "every day. Some model features therefore rely on the "
+        "latest available historical laboratory information "
+        "rather than a same-day measurement."
+    )
+
+
+with st.expander(
+    "Potential false negatives"
+):
+
+    st.write(
+        "No prediction model identifies every elevated-risk event. "
+        "A false negative occurs when actual bacterial risk is "
+        "elevated but the model does not identify it as such. "
+        "This is one reason official laboratory testing and "
+        "public-health guidance remain essential."
+    )
+
+
+# ==========================================================
+# SAFETY
 # ==========================================================
 
 st.html(
@@ -39,214 +235,29 @@ st.html(
     border:1px solid #F1E59A;
     border-radius:12px;
     padding:1rem 1.1rem;
-    margin-bottom:1.5rem;
-    font-size:0.9rem;
-    font-weight:600;
+    margin-top:1.3rem;
+    margin-bottom:1rem;
     line-height:1.5;
 ">
-    BeachGuard is an experimental research prototype
-    and is not an official water-quality advisory.
+
+    <strong>
+        Official information takes priority.
+    </strong>
+
+    BeachGuard should never replace beach signage,
+    laboratory results, public-health advisories,
+    or official closures.
+
 </div>
 """
 )
 
-# ==========================================================
-# ONE PILOT SITE
-# ==========================================================
-
-st.subheader("One Pilot Site")
-
-st.write(
-    """
-The current system is designed for
-**Parkside Aquatic Park, San Mateo, California**.
-
-Performance should not automatically be assumed
-to transfer to other beaches, lagoons, counties,
-or watersheds without additional testing and validation.
-"""
-)
-
-
-# ==========================================================
-# NOT A REAL-TIME BACTERIA SENSOR
-# ==========================================================
-
-st.subheader("Not a Real-Time Bacteria Sensor")
-
-st.write(
-    """
-BeachGuard does not directly measure bacteria
-in the water.
-
-Instead, AquaCast estimates bacterial risk using
-environmental conditions and relationships found
-in historical monitoring data.
-
-Laboratory testing is still required to directly
-measure bacterial concentrations.
-"""
-)
-
-
-# ==========================================================
-# LIMITED ELEVATED-RISK EVENTS
-# ==========================================================
-
-st.subheader("Limited Elevated-Risk Events")
-
-st.write(
-    """
-Elevated bacterial observations occur less often
-than lower-risk observations in the historical dataset.
-
-This is particularly important for **Enterococcus**,
-where the number of exceedance events is relatively
-limited.
-
-Because there are fewer elevated-risk examples for
-the model to learn from, Enterococcus predictions
-may be less reliable under some conditions.
-"""
-)
-
-
-# ==========================================================
-# HISTORICAL RELATIONSHIPS
-# ==========================================================
-
-st.subheader("Historical Relationships Can Change")
-
-st.write(
-    """
-AquaCast relies on relationships identified in
-historical environmental and bacterial monitoring data.
-
-Those relationships may not remain identical in the future.
-
-Unexpected contamination sources, infrastructure failures,
-wildlife events, unusual storms, or environmental conditions
-outside the historical training range may reduce model accuracy.
-"""
-)
-
-
-# ==========================================================
-# WEATHER FORECAST UNCERTAINTY
-# ==========================================================
-
-st.subheader("Weather Forecast Uncertainty")
-
-st.write(
-    """
-The live forecast extension uses recent and forecast
-weather conditions.
-
-Weather forecasts, especially rainfall forecasts,
-can be inaccurate.
-
-Because rainfall and other environmental conditions
-are model inputs, weather forecast errors can affect
-the resulting AquaCast bacterial-risk probabilities.
-"""
-)
-
-
-# ==========================================================
-# LATEST-KNOWN LAB VALUES
-# ==========================================================
-
-st.subheader("Latest-Known Laboratory Inputs")
-
-st.write(
-    """
-Some AquaCast model features depend on previous
-bacterial monitoring results.
-
-Future laboratory measurements are not available
-at prediction time.
-
-For these features, the live forecasting layer uses
-the latest available historical laboratory information.
-
-As a result, the live forecast should be interpreted
-as a decision-support estimate rather than a
-laboratory-confirmed current water condition.
-"""
-)
-
-
-# ==========================================================
-# MODEL PERFORMANCE
-# ==========================================================
-
-st.subheader("Performance Can Change")
-
-st.write(
-    """
-Historical test performance does not guarantee
-the same performance on future observations.
-
-Model performance should be reevaluated whenever
-the dataset, feature set, thresholds, or trained
-model versions change.
-"""
-)
-
-
-# ==========================================================
-# FALSE NEGATIVES
-# ==========================================================
-
-st.subheader("False Negatives Are Possible")
-
-st.write(
-    """
-Like any classification model, AquaCast can make
-incorrect predictions.
-
-A particularly important error is a **false negative**:
-a condition in which bacterial risk is actually elevated
-but the model predicts a lower-risk category.
-
-For this reason, AquaCast forecasts should never be used
-as the only basis for deciding whether recreational water
-is safe.
-"""
-)
-
-
-# ==========================================================
-# OFFICIAL INFORMATION
-# ==========================================================
-
-st.subheader("Official Information Takes Priority")
-
-st.write(
-    """
-Official laboratory results, public-health advisories,
-beach postings, closures, and government agency notices
-always take priority over an AquaCast forecast.
-
-BeachGuard is intended to supplement public information,
-not replace it.
-"""
-)
-
-
-# ==========================================================
-# OFFICIAL ADVISORY BUTTON
-# ==========================================================
 
 st.link_button(
-    "Check Official Water-Quality Advisories",
+    "View Official San Mateo County Beach Status",
     OFFICIAL_URL,
     use_container_width=True,
 )
 
-
-# ==========================================================
-# FOOTER
-# ==========================================================
 
 render_footer()
