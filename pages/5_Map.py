@@ -1,146 +1,255 @@
 import pandas as pd
+import pydeck as pdk
 import streamlit as st
 
 from utils.live_forecast import load_live_latest
 from utils.styles import apply_styles
 from utils.ui import (
-    SITE_NAME,
     OFFICIAL_URL,
+    SITE_NAME,
     render_footer,
+    risk_class,
 )
 from utils.validation import load_valid_latest
 
 
-st.set_page_config(
-    page_title="Pilot Site Map | BeachGuard",
-    page_icon="🌊",
-    layout="wide",
-)
-
 apply_styles()
 
+
+# ==========================================================
+# SITE
+# ==========================================================
 
 SITE_LAT = 37.5602
 SITE_LON = -122.2910
 
 
 # ==========================================================
-# LOAD CURRENT PREDICTION
+# LOAD CURRENT FORECAST
 # ==========================================================
 
 live_prediction = True
 
+
 try:
+
     latest = load_live_latest()
 
 except Exception:
+
     live_prediction = False
 
     try:
+
         latest = load_valid_latest()
 
     except Exception:
+
         st.error(
-            "Map data is currently unavailable."
+            "The AquaCast map is temporarily unavailable."
         )
 
         st.link_button(
-            "Check Official Water-Quality Advisories",
+            "View Official San Mateo County Beach Status",
             OFFICIAL_URL,
+            use_container_width=True,
         )
 
         st.stop()
 
 
-# ==========================================================
-# PREPARE VALUES
-# ==========================================================
-
-latitude = float(
-    latest.get(
-        "latitude",
-        SITE_LAT,
-    )
-)
-
-longitude = float(
-    latest.get(
-        "longitude",
-        SITE_LON,
-    )
-)
-
-overall_risk = str(
-    latest["overall_risk"]
+overall = str(
+    latest[
+        "overall_risk"
+    ]
 ).strip()
 
+
+ecoli = float(
+    latest[
+        "e_coli_probability"
+    ]
+)
+
+
+entero = float(
+    latest[
+        "enterococcus_probability"
+    ]
+)
+
+
 prediction_date = pd.to_datetime(
-    latest["prediction_date"],
+    latest[
+        "prediction_date"
+    ],
     errors="coerce",
 )
 
-model_version = str(
-    latest["model_version"]
-)
 
-prediction_text = (
+date_text = (
     prediction_date.strftime(
         "%b %d, %Y"
     )
-    if pd.notna(prediction_date)
+    if pd.notna(
+        prediction_date
+    )
     else "Date unavailable"
 )
 
-source_text = (
-    "Live AquaCast forecast"
-    if live_prediction
-    else "Latest validated saved forecast"
+
+# ==========================================================
+# RISK COLOR
+# ==========================================================
+
+RISK_COLORS = {
+    "Safe":
+        [
+            46,
+            125,
+            50,
+            210,
+        ],
+
+    "Caution":
+        [
+            178,
+            106,
+            0,
+            210,
+        ],
+
+    "Unsafe":
+        [
+            198,
+            40,
+            40,
+            210,
+        ],
+}
+
+
+marker_color = RISK_COLORS.get(
+    overall,
+    [
+        102,
+        112,
+        133,
+        210,
+    ],
 )
 
 
 # ==========================================================
-# PAGE HEADER
+# HEADER
 # ==========================================================
 
 st.title(
-    "Pilot Site Map"
+    "Map"
 )
 
 st.caption(
-    f"{SITE_NAME} · "
-    "San Mateo, California"
+    "Current AquaCast forecast location at "
+    f"{SITE_NAME}."
 )
 
 
 # ==========================================================
-# CURRENT SITE STATUS
+# COMPACT SITE SUMMARY
 # ==========================================================
 
-col1, col2, col3 = st.columns(
-    3
+risk_color = {
+    "Safe":
+        "#2E7D32",
+
+    "Caution":
+        "#B26A00",
+
+    "Unsafe":
+        "#C62828",
+}.get(
+    overall,
+    "#667085",
 )
 
-with col1:
-    st.metric(
-        "Current Overall Risk",
-        overall_risk,
-    )
 
-with col2:
-    st.metric(
-        "Prediction Date",
-        prediction_text,
-    )
+st.html(
+    f"""
+<div style="
+    background:#FFFFFF;
+    border:1px solid #E4E7EC;
+    border-radius:14px;
+    padding:1rem 1.1rem;
+    margin-bottom:1rem;
+">
 
-with col3:
-    st.metric(
-        "Forecast Source",
-        (
-            "Live"
-            if live_prediction
-            else "Saved"
-        ),
-    )
+    <div style="
+        display:flex;
+        justify-content:space-between;
+        gap:1rem;
+        flex-wrap:wrap;
+    ">
+
+        <div>
+
+            <div style="
+                color:#172033;
+                font-size:1rem;
+                font-weight:800;
+            ">
+                Parkside Aquatic Park
+            </div>
+
+            <div style="
+                color:#667085;
+                font-size:0.76rem;
+                margin-top:0.15rem;
+            ">
+                San Mateo, California · {date_text}
+            </div>
+
+        </div>
+
+
+        <div style="
+            color:{risk_color};
+            font-size:1rem;
+            font-weight:800;
+        ">
+            {overall}
+        </div>
+
+    </div>
+
+
+    <div style="
+        display:flex;
+        flex-wrap:wrap;
+        gap:1.2rem;
+        margin-top:0.8rem;
+        color:#475467;
+        font-size:0.78rem;
+    ">
+
+        <span>
+            E. coli
+            <strong style="color:#172033;">
+                {ecoli:.1%}
+            </strong>
+        </span>
+
+        <span>
+            Enterococcus
+            <strong style="color:#172033;">
+                {entero:.1%}
+            </strong>
+        </span>
+
+    </div>
+
+</div>
+"""
+)
 
 
 # ==========================================================
@@ -148,108 +257,168 @@ with col3:
 # ==========================================================
 
 map_data = pd.DataFrame(
-    {
-        "lat": [
-            latitude
-        ],
-        "lon": [
-            longitude
-        ],
-    }
+    [
+        {
+            "lat":
+                SITE_LAT,
+
+            "lon":
+                SITE_LON,
+
+            "site":
+                "Parkside Aquatic Park",
+
+            "overall":
+                overall,
+
+            "ecoli":
+                f"{ecoli:.1%}",
+
+            "entero":
+                f"{entero:.1%}",
+
+            "date":
+                date_text,
+        }
+    ]
 )
 
-with st.container(
-    border=True
-):
-    st.map(
-        map_data,
-        zoom=14,
-    )
 
-    st.caption(
-        f"📍 {SITE_NAME} · "
-        f"Current AquaCast risk: {overall_risk}"
-    )
+layer = pdk.Layer(
+    "ScatterplotLayer",
+    data=map_data,
+    get_position=[
+        "lon",
+        "lat",
+    ],
+    get_fill_color=marker_color,
+    get_line_color=[
+        255,
+        255,
+        255,
+        255,
+    ],
+    line_width_min_pixels=2,
+    stroked=True,
+    filled=True,
+    radius_min_pixels=8,
+    radius_max_pixels=12,
+    pickable=True,
+)
+
+
+view_state = pdk.ViewState(
+    latitude=SITE_LAT,
+    longitude=SITE_LON,
+    zoom=14.4,
+    pitch=0,
+)
+
+
+deck = pdk.Deck(
+    layers=[
+        layer
+    ],
+
+    initial_view_state=view_state,
+
+    tooltip={
+        "html":
+            "<b>{site}</b><br/>"
+            "Current AquaCast forecast: {overall}<br/>"
+            "E. coli: {ecoli}<br/>"
+            "Enterococcus: {entero}<br/>"
+            "Forecast date: {date}",
+
+        "style":
+            {
+                "backgroundColor":
+                    "#172033",
+
+                "color":
+                    "white",
+            },
+    },
+)
+
+
+st.pydeck_chart(
+    deck,
+    use_container_width=True,
+)
 
 
 # ==========================================================
-# SITE INFORMATION
+# MAP ACTIONS
 # ==========================================================
 
-st.subheader(
-    "Site Information"
-)
-
-info_col1, info_col2 = st.columns(
+button1, button2 = st.columns(
     2
 )
 
-with info_col1:
-    st.markdown(
-        f"""
-**Pilot site:** {SITE_NAME}
 
-**Latitude:** {latitude:.4f}
+with button1:
 
-**Longitude:** {longitude:.4f}
-"""
-    )
-
-with info_col2:
-    st.markdown(
-        f"""
-**Current model risk:** {overall_risk}
-
-**Forecast date:** {prediction_text}
-
-**Data source:** {source_text}
-"""
+    st.link_button(
+        "Directions",
+        (
+            "https://www.google.com/maps/dir/"
+            "?api=1&destination="
+            f"{SITE_LAT},{SITE_LON}"
+        ),
+        use_container_width=True,
     )
 
 
-# ==========================================================
-# MAP LINKS
-# ==========================================================
+with button2:
 
-button_col1, button_col2 = st.columns(
-    2
-)
-
-with button_col1:
     st.link_button(
         "Open in Google Maps",
         (
             "https://www.google.com/maps/search/"
             "?api=1&query="
-            f"{latitude},{longitude}"
+            f"{SITE_LAT},{SITE_LON}"
         ),
         use_container_width=True,
     )
 
-with button_col2:
-    st.link_button(
-        "Check Official Advisories",
-        OFFICIAL_URL,
-        use_container_width=True,
-    )
-
 
 # ==========================================================
-# SAFETY NOTE
+# SOURCE
 # ==========================================================
 
-st.warning(
-    "This map identifies the AquaCast pilot site "
-    "and displays a model-estimated risk. "
-    "It does not represent an official beach closure, "
-    "posting, or public-health advisory."
+source_text = (
+    "Live weather-based AquaCast forecast"
+    if live_prediction
+    else "Latest validated saved AquaCast forecast"
 )
 
 
-# ==========================================================
-# FOOTER
-# ==========================================================
+st.caption(
+    f"Forecast source: {source_text}. "
+    "Map marker color uses the same Safe / Caution / "
+    "Unsafe classification shown throughout BeachGuard."
+)
+
+
+st.warning(
+    "The map shows AquaCast's pilot forecast location. "
+    "It does not indicate an official beach closure "
+    "or advisory."
+)
+
+
+st.link_button(
+    "View Official San Mateo County Beach Status",
+    OFFICIAL_URL,
+    use_container_width=True,
+)
+
 
 render_footer(
-    model_version
+    str(
+        latest[
+            "model_version"
+        ]
+    )
 )
