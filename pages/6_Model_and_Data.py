@@ -1,316 +1,541 @@
+import re
+from pathlib import Path
+
 import pandas as pd
 import streamlit as st
 
 from utils.live_forecast import load_live_latest
 from utils.styles import apply_styles
-from utils.ui import render_footer
+from utils.ui import (
+    GITHUB_URL,
+    OFFICIAL_URL,
+    render_footer,
+    successful_generation_text,
+)
 from utils.validation import (
-    APP_VERSION,
     validate_prediction_row,
-    validate_saved_csv,
 )
 
-
-st.set_page_config(
-    page_title="Model & Data | BeachGuard",
-    page_icon="🌊",
-    layout="wide",
-)
 
 apply_styles()
 
 
 # ==========================================================
-# PAGE HEADER
+# PATH
 # ==========================================================
 
-st.title("Model & Data")
+ROOT = (
+    Path(__file__)
+    .resolve()
+    .parent
+    .parent
+)
 
-st.caption(
-    "Model design, data sources, thresholds, "
-    "performance, and current data status."
+DATA_PATH = (
+    ROOT
+    / "data"
+    / "Aquacast15Years_Weekly.csv"
 )
 
 
 # ==========================================================
-# DATA STATUS
+# HELPERS
 # ==========================================================
 
-st.subheader("Data Status")
+def normalize(
+    value
+):
+    return re.sub(
+        r"[^a-z0-9]+",
+        "",
+        str(
+            value
+        ).lower(),
+    )
+
+
+def find_column(
+    columns,
+    candidates,
+):
+    lookup = {
+        normalize(
+            column
+        ):
+            column
+        for column
+        in columns
+    }
+
+    for candidate in candidates:
+
+        key = normalize(
+            candidate
+        )
+
+        if key in lookup:
+            return lookup[
+                key
+            ]
+
+    return None
+
+
+@st.cache_data(
+    show_spinner=False
+)
+def dataset_summary():
+
+    result = {
+        "latest_lab_date":
+            None,
+
+        "ecoli_n":
+            None,
+
+        "ecoli_cases":
+            None,
+
+        "entero_n":
+            None,
+
+        "entero_cases":
+            None,
+    }
+
+
+    if not DATA_PATH.exists():
+        return result
+
+
+    try:
+
+        df = pd.read_csv(
+            DATA_PATH
+        )
+
+    except Exception:
+
+        return result
+
+
+    date_col = find_column(
+        df.columns,
+        [
+            "prediction_date",
+            "sample_date",
+            "date",
+            "Date",
+            "SampleDate",
+        ],
+    )
+
+
+    ecoli_col = find_column(
+        df.columns,
+        [
+            "e_coli",
+            "ecoli",
+            "E. coli",
+            "E_coli",
+            "e_coli_result",
+            "ecoli_result",
+            "e_coli_value",
+            "ecoli_value",
+        ],
+    )
+
+
+    entero_col = find_column(
+        df.columns,
+        [
+            "enterococcus",
+            "Enterococcus",
+            "entero",
+            "enterococcus_result",
+            "entero_result",
+            "enterococcus_value",
+            "entero_value",
+        ],
+    )
+
+
+    if date_col is None:
+        return result
+
+
+    df[
+        date_col
+    ] = pd.to_datetime(
+        df[
+            date_col
+        ],
+        errors="coerce",
+    )
+
+
+    dated = df.dropna(
+        subset=[
+            date_col
+        ]
+    )
+
+
+    if not dated.empty:
+
+        result[
+            "latest_lab_date"
+        ] = (
+            dated[
+                date_col
+            ]
+            .max()
+        )
+
+
+    # Chronological held-out test period used by AquaCast.
+    test = dated[
+        (
+            dated[
+                date_col
+            ]
+            >= pd.Timestamp(
+                "2024-01-01"
+            )
+        )
+        &
+        (
+            dated[
+                date_col
+            ]
+            <= pd.Timestamp(
+                "2025-12-31"
+            )
+        )
+    ].copy()
+
+
+    if ecoli_col is not None:
+
+        values = pd.to_numeric(
+            test[
+                ecoli_col
+            ],
+            errors="coerce",
+        ).dropna()
+
+        if not values.empty:
+
+            result[
+                "ecoli_n"
+            ] = int(
+                len(
+                    values
+                )
+            )
+
+            result[
+                "ecoli_cases"
+            ] = int(
+                (
+                    values
+                    >= 235
+                ).sum()
+            )
+
+
+    if entero_col is not None:
+
+        values = pd.to_numeric(
+            test[
+                entero_col
+            ],
+            errors="coerce",
+        ).dropna()
+
+        if not values.empty:
+
+            result[
+                "entero_n"
+            ] = int(
+                len(
+                    values
+                )
+            )
+
+            result[
+                "entero_cases"
+            ] = int(
+                (
+                    values
+                    >= 130
+                ).sum()
+            )
+
+
+    return result
+
+
+def display_number(
+    value
+):
+    if value is None:
+        return "Not available"
+
+    return str(
+        value
+    )
+
+
+# ==========================================================
+# HEADER
+# ==========================================================
+
+st.title(
+    "Model & Data"
+)
+
+st.caption(
+    "Technical details for reviewers, researchers, "
+    "and users who want to understand how AquaCast works."
+)
+
+
+# ==========================================================
+# CURRENT SYSTEM STATUS
+# ==========================================================
+
+st.subheader(
+    "System Status"
+)
 
 
 try:
-    current = load_live_latest()
 
-    current_result = validate_prediction_row(
-        current
+    latest = load_live_latest()
+
+    validation = (
+        validate_prediction_row(
+            latest
+        )
     )
 
-    live_status = "Available"
+    generated_text = (
+        successful_generation_text(
+            latest,
+            using_live=True,
+        )
+    )
+
+    model_version = str(
+        latest[
+            "model_version"
+        ]
+    )
+
+    data_check = (
+        "Passed"
+        if validation[
+            "valid"
+        ]
+        else "Attention needed"
+    )
 
 except Exception:
-    current = None
 
-    current_result = {
-        "valid": False,
-        "warnings": [],
-        "errors": [
-            "Live prediction unavailable."
-        ],
-        "stale": False,
-    }
+    latest = None
 
-    live_status = "Unavailable"
+    generated_text = (
+        "Live forecast unavailable"
+    )
 
+    model_version = (
+        "Unavailable"
+    )
 
-saved_df, saved_status = validate_saved_csv()
-
-
-status_col1, status_col2, status_col3, status_col4 = st.columns(
-    4
-)
-
-
-with status_col1:
-    st.metric(
-        "Live Forecast",
-        live_status,
+    data_check = (
+        "Unavailable"
     )
 
 
-with status_col2:
-    st.metric(
-        "Current Validation",
-        (
-            "Pass"
-            if current_result["valid"]
-            else "Fail"
-        ),
-    )
+summary = dataset_summary()
 
 
-with status_col3:
-    st.metric(
-        "Saved Valid Rows",
-        saved_status["valid_rows"],
-    )
-
-
-with status_col4:
-    st.metric(
-        "App Version",
-        APP_VERSION,
-    )
-
-
-status_table = pd.DataFrame(
-    [
-        {
-            "Check": "Saved CSV load",
-            "Status": (
-                "Pass"
-                if saved_status["loaded"]
-                else "Fail"
-            ),
-        },
-        {
-            "Check": "Required columns",
-            "Status": (
-                "Pass"
-                if not saved_status["missing_columns"]
-                else "Fail"
-            ),
-        },
-        {
-            "Check": "Duplicate records",
-            "Status": (
-                "Pass"
-                if saved_status["duplicate_count"] == 0
-                else "Fail"
-            ),
-        },
-        {
-            "Check": "Invalid rows",
-            "Status": saved_status["invalid_rows"],
-        },
-        {
-            "Check": "Saved forecast stale",
-            "Status": (
-                "Yes"
-                if saved_status["stale"]
-                else "No"
-            ),
-        },
+latest_lab_date = (
+    summary[
+        "latest_lab_date"
     ]
 )
 
 
-st.dataframe(
-    status_table,
-    hide_index=True,
-    use_container_width=True,
+latest_lab_text = (
+    latest_lab_date.strftime(
+        "%b %d, %Y"
+    )
+    if pd.notna(
+        latest_lab_date
+    )
+    else "Not available"
 )
 
 
-if current_result["errors"]:
-    with st.expander(
-        "Current validation details"
-    ):
-        for error in current_result["errors"]:
-            st.write(
-                f"• {error}"
-            )
+status1, status2 = st.columns(
+    2
+)
 
 
-if current_result["warnings"]:
-    with st.expander(
-        "Current validation warnings"
-    ):
-        for warning in current_result["warnings"]:
-            st.write(
-                f"• {warning}"
-            )
+with status1:
+
+    st.metric(
+        "Automated Data Checks",
+        data_check,
+    )
+
+
+with status2:
+
+    st.metric(
+        "Weather Input",
+        "Open-Meteo",
+    )
+
+
+status3, status4 = st.columns(
+    2
+)
+
+
+with status3:
+
+    st.metric(
+        "Latest Laboratory Input",
+        latest_lab_text,
+    )
+
+
+with status4:
+
+    st.metric(
+        "Forecast Generated",
+        generated_text,
+    )
+
+
+st.caption(
+    f"Deployed model version: {model_version}"
+)
 
 
 # ==========================================================
-# WHAT AQUACAST PREDICTS
+# WHAT THE MODEL PREDICTS
 # ==========================================================
 
-st.subheader("What AquaCast Predicts")
+st.subheader(
+    "What AquaCast predicts"
+)
+
 
 st.write(
-    """
-AquaCast estimates the probability that
-**E. coli** or **Enterococcus** will exceed an
-elevated-risk concentration threshold at
-**Parkside Aquatic Park, San Mateo**.
-
-The system performs classification rather than
-predicting an exact bacterial concentration.
-
-Direct bacterial concentrations require
-laboratory measurement.
-"""
+    "AquaCast is a binary classification system. "
+    "It estimates the probability that a bacterial "
+    "measurement exceeds a concentration threshold; "
+    "it does not predict the exact bacterial concentration."
 )
 
 
-# ==========================================================
-# DATA SOURCES
-# ==========================================================
+threshold_table = pd.DataFrame(
+    {
+        "Organism":
+            [
+                "E. coli",
+                "Enterococcus",
+            ],
 
-st.subheader("Data Sources")
+        "Concentration threshold":
+            [
+                "235 MPN/100 mL",
+                "130 MPN/100 mL",
+            ],
 
-st.markdown(
-    """
-- **California Water Boards / California Open Data**  
-  Historical fecal-indicator bacteria monitoring observations.
+        "AquaCast Safe":
+            [
+                "<10%",
+                "<40%",
+            ],
 
-- **NOAA / NCEI**  
-  Historical precipitation and temperature observations used
-  during model development.
+        "AquaCast Caution":
+            [
+                "10% to <50%",
+                "40% to <85%",
+            ],
 
-- **Open-Meteo**  
-  Recent and forecast weather used by the live forecast layer.
-
-Tide and sanitary-sewer-overflow variables were considered
-during earlier development but are not final V2 model inputs.
-"""
-)
-
-
-# ==========================================================
-# RISK THRESHOLDS
-# ==========================================================
-
-st.subheader("Risk Thresholds")
-
-
-thresholds = pd.DataFrame(
-    [
-        {
-            "Bacterium": "E. coli",
-            "Safe": "<10%",
-            "Caution": "10% to <50%",
-            "Unsafe": "≥50%",
-            "Concentration Threshold": "235 MPN/100 mL",
-        },
-        {
-            "Bacterium": "Enterococcus",
-            "Safe": "<40%",
-            "Caution": "40% to <85%",
-            "Unsafe": "≥85%",
-            "Concentration Threshold": "130 MPN/100 mL",
-        },
-    ]
+        "AquaCast Unsafe":
+            [
+                "≥50%",
+                "≥85%",
+            ],
+    }
 )
 
 
 st.dataframe(
-    thresholds,
+    threshold_table,
     hide_index=True,
     use_container_width=True,
 )
 
 
 st.info(
-    "The Safe, Caution, and Unsafe probability boundaries "
-    "are AquaCast display thresholds. "
-    "They are separate from the underlying bacterial "
-    "concentration thresholds."
+    "The bacterial concentration thresholds and the "
+    "AquaCast probability display thresholds are different "
+    "concepts. Concentration thresholds define the event "
+    "the model is trying to predict. Probability thresholds "
+    "determine how BeachGuard communicates model risk."
+)
+
+
+st.link_button(
+    "Verify Official San Mateo County Beach Information",
+    OFFICIAL_URL,
 )
 
 
 # ==========================================================
-# FEATURE GROUPS
+# INPUT FEATURES
 # ==========================================================
 
-st.subheader("Feature Groups")
+st.subheader(
+    "Selected environmental features"
+)
+
+
+st.write(
+    "The deployed models use combinations of recent rainfall, "
+    "antecedent dry conditions, temperature, seasonal information, "
+    "and available historical bacteria information."
+)
 
 
 features = pd.DataFrame(
-    [
-        {
-            "Feature Group": "Short-term rainfall",
-            "Examples": (
-                "rain_1day, rain_3day_sum, "
-                "rain lags"
-            ),
-        },
-        {
-            "Feature Group": "Rainfall pattern",
-            "Examples": (
-                "rain ratios, rolling rainfall, "
-                "rain intensity"
-            ),
-        },
-        {
-            "Feature Group": "Temperature",
-            "Examples": (
-                "3-day, 7-day, and 14-day "
-                "temperature averages"
-            ),
-        },
-        {
-            "Feature Group": "Dry period / first flush",
-            "Examples": (
-                "adp_days, first_flush_index"
-            ),
-        },
-        {
-            "Feature Group": "Seasonal / interaction",
-            "Examples": (
-                "wet season and "
-                "rain-temperature interactions"
-            ),
-        },
-        {
-            "Feature Group": "Previous bacteria history",
-            "Examples": (
-                "previous laboratory results and "
-                "prior exceedance indicators"
-            ),
-        },
-    ]
+    {
+        "Feature group":
+            [
+                "Rainfall",
+                "Dry-period conditions",
+                "Temperature",
+                "Seasonality",
+                "Historical laboratory information",
+            ],
+
+        "Examples":
+            [
+                "1-day rain, 3-day rain, lagged rainfall",
+                "Antecedent dry days and first-flush index",
+                "Recent average temperature",
+                "Month / seasonal timing",
+                "Latest available bacteria information",
+            ],
+    }
 )
 
 
@@ -322,37 +547,106 @@ st.dataframe(
 
 
 # ==========================================================
-# DOCUMENTED MODEL PERFORMANCE
+# VALIDATION METHOD
 # ==========================================================
 
-st.subheader("Documented Final V2 Performance")
+st.subheader(
+    "Validation method"
+)
+
+
+st.write(
+    "AquaCast uses a chronological split rather than randomly "
+    "mixing observations across time. Earlier observations were "
+    "used for model development, while 2024–2025 observations "
+    "were held out for final evaluation."
+)
+
+
+st.write(
+    "Probability decision thresholds were selected using "
+    "validation data only. The final held-out test period was "
+    "not used to choose those thresholds."
+)
+
+
+# ==========================================================
+# PERFORMANCE
+# ==========================================================
+
+st.subheader(
+    "Held-out test performance"
+)
 
 
 performance = pd.DataFrame(
-    [
-        {
-            "Bacterium": "E. coli",
-            "Model": (
-                "Logistic Regression / "
-                "expanded no-tides"
-            ),
-            "Recall": 0.950,
-            "Precision": 0.533,
-            "F1": 0.683,
-            "PR-AUC": 0.767,
-        },
-        {
-            "Bacterium": "Enterococcus",
-            "Model": (
-                "Logistic Regression / "
-                "base no-SSO"
-            ),
-            "Recall": 0.657,
-            "Precision": 0.657,
-            "F1": 0.657,
-            "PR-AUC": 0.691,
-        },
-    ]
+    {
+        "Model":
+            [
+                "E. coli",
+                "Enterococcus",
+            ],
+
+        "Selected method":
+            [
+                "Logistic Regression",
+                "Logistic Regression",
+            ],
+
+        "Test observations":
+            [
+                display_number(
+                    summary[
+                        "ecoli_n"
+                    ]
+                ),
+
+                display_number(
+                    summary[
+                        "entero_n"
+                    ]
+                ),
+            ],
+
+        "Elevated-risk cases":
+            [
+                display_number(
+                    summary[
+                        "ecoli_cases"
+                    ]
+                ),
+
+                display_number(
+                    summary[
+                        "entero_cases"
+                    ]
+                ),
+            ],
+
+        "Recall":
+            [
+                "95.0%",
+                "65.7%",
+            ],
+
+        "Precision":
+            [
+                "53.3%",
+                "65.7%",
+            ],
+
+        "F1":
+            [
+                "68.3%",
+                "65.7%",
+            ],
+
+        "PR-AUC":
+            [
+                "76.7%",
+                "69.1%",
+            ],
+    }
 )
 
 
@@ -364,94 +658,144 @@ st.dataframe(
 
 
 st.caption(
-    "These are the documented Final V2 benchmark values. "
-    "They should be regenerated whenever the dataset, "
-    "features, or model version changes."
+    "If the deployed weekly dataset does not contain an "
+    "identifiable raw concentration column, the test observation "
+    "and elevated-case fields are intentionally shown as "
+    "'Not available' rather than estimated."
 )
 
 
 # ==========================================================
-# VALIDATION METHOD
+# METRIC DEFINITIONS
 # ==========================================================
 
-st.subheader("Validation Method")
+with st.expander(
+    "What do Recall, Precision, F1, and PR-AUC mean?"
+):
 
-st.write(
-    """
-AquaCast uses chronological training, validation,
-and test periods.
+    st.markdown(
+        """
+**Recall** describes how often actual elevated-risk events
+were correctly identified.
 
-Earlier observations are used to predict later
-conditions rather than randomly mixing historical
-and future observations.
+**Precision** describes how often an elevated-risk prediction
+was actually associated with an elevated-risk event.
 
-Probability thresholds are selected using the
-validation period only. The final test period is
-reserved for final evaluation.
+**F1** balances recall and precision in one score.
 
-False negatives receive special attention because
-they represent elevated-risk conditions predicted
-as lower risk.
+**PR-AUC** summarizes performance across different probability
+thresholds and is particularly useful when elevated-risk events
+are less common than normal observations.
 """
-)
-
-
-# ==========================================================
-# LIVE FORECAST EXTENSION
-# ==========================================================
-
-st.subheader("Live Forecast Extension")
-
-st.write(
-    """
-The deployed BeachGuard application extends the
-original AquaCast research pipeline with a live
-weather support layer.
-
-Recent and forecast weather conditions are retrieved
-from Open-Meteo and transformed into the same types
-of environmental features used by the trained models.
-
-Some features that depend on previous laboratory
-results use the latest available historical value,
-because future laboratory measurements are not known.
-"""
-)
-
-
-# ==========================================================
-# AI-ASSISTED DEVELOPMENT
-# ==========================================================
-
-st.subheader("AI-Assisted Development")
-
-st.write(
-    """
-AI-assisted tools were used for limited code support,
-debugging, review, and documentation.
-
-The project developer remains responsible for
-understanding, testing, editing, debugging, and
-maintaining the submitted code.
-"""
-)
-
-
-# ==========================================================
-# FOOTER
-# ==========================================================
-
-if current is not None:
-    footer_version = str(
-        current.get(
-            "model_version",
-            APP_VERSION,
-        )
     )
-else:
-    footer_version = APP_VERSION
+
+
+# ==========================================================
+# FUTURE FORECASTING
+# ==========================================================
+
+st.subheader(
+    "Live forecasting"
+)
+
+
+st.write(
+    "The deployed application uses Open-Meteo environmental "
+    "forecasts to extend AquaCast beyond the historical dataset. "
+    "Future AquaCast uncertainty therefore includes both model "
+    "uncertainty and uncertainty in the environmental forecast."
+)
+
+
+# ==========================================================
+# DATA SOURCES
+# ==========================================================
+
+st.subheader(
+    "Data provenance"
+)
+
+
+source1, source2 = st.columns(
+    2
+)
+
+
+with source1:
+
+    st.link_button(
+        "California Water Boards / SWAMP",
+        "https://www.waterboards.ca.gov/water_issues/programs/swamp/",
+        use_container_width=True,
+    )
+
+
+with source2:
+
+    st.link_button(
+        "NOAA NCEI",
+        "https://www.ncei.noaa.gov/",
+        use_container_width=True,
+    )
+
+
+source3, source4 = st.columns(
+    2
+)
+
+
+with source3:
+
+    st.link_button(
+        "Open-Meteo",
+        "https://open-meteo.com/",
+        use_container_width=True,
+    )
+
+
+with source4:
+
+    st.link_button(
+        "Project Repository / Methodology",
+        GITHUB_URL,
+        use_container_width=True,
+    )
+
+
+# ==========================================================
+# EXCLUDED INPUTS
+# ==========================================================
+
+with st.expander(
+    "Inputs evaluated but not used in the deployed model"
+):
+
+    st.write(
+        "Tide variables and sanitary sewer overflow variables "
+        "were evaluated during development but are not part "
+        "of the selected deployed model configuration."
+    )
+
+
+# ==========================================================
+# AI DISCLOSURE
+# ==========================================================
+
+with st.expander(
+    "AI-assisted development disclosure"
+):
+
+    st.write(
+        "AI tools were used as development assistance for "
+        "tasks such as coding support, debugging, organization, "
+        "and interface refinement. Model design decisions, "
+        "data preparation, evaluation, interpretation, and "
+        "project conclusions remain part of the research workflow "
+        "and should be evaluated on the documented methodology "
+        "and reproducible project artifacts."
+    )
 
 
 render_footer(
-    footer_version
+    model_version
 )
