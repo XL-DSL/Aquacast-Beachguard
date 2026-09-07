@@ -1,272 +1,276 @@
 import streamlit as st
 
 from utils.styles import apply_styles
-from utils.ui import render_footer
-
-
-st.set_page_config(
-    page_title="About AquaCast | BeachGuard",
-    page_icon="🌊",
-    layout="wide",
+from utils.ui import (
+    GITHUB_URL,
+    OFFICIAL_URL,
+    SITE_NAME,
+    render_footer,
 )
+
 
 apply_styles()
 
 
-st.html(
-    """
-<div class="bg-reading">
+# ==========================================================
+# HEADER
+# ==========================================================
 
-    <div class="bg-page-heading">
+st.title(
+    "About AquaCast"
+)
 
-        <h1>
-            About AquaCast
-        </h1>
+st.caption(
+    "A plain-language overview of what BeachGuard "
+    "does and why it was created."
+)
 
-        <p>
-            How environmental information becomes
-            a BeachGuard water-quality risk forecast.
-        </p>
 
+# ==========================================================
+# WHY THIS MATTERS
+# ==========================================================
+
+st.subheader(
+    "Why this matters"
+)
+
+
+st.write(
+    "Recreational-water bacteria measurements depend on "
+    "laboratory sampling, so information about changing "
+    "conditions may not always be available immediately. "
+    "AquaCast explores whether environmental information "
+    "such as recent rainfall and temperature can provide "
+    "an additional early indication of elevated bacterial risk."
+)
+
+
+# ==========================================================
+# WORKFLOW
+# ==========================================================
+
+st.subheader(
+    "How AquaCast works"
+)
+
+
+step1, step2, step3 = st.columns(
+    3
+)
+
+
+with step1:
+
+    st.html(
+        """
+<div style="
+    background:#FFFFFF;
+    border:1px solid #E4E7EC;
+    border-radius:14px;
+    padding:1.1rem;
+    min-height:175px;
+">
+
+    <div style="
+        color:#0F6B78;
+        font-weight:800;
+        font-size:0.75rem;
+    ">
+        1 · ENVIRONMENTAL DATA
     </div>
 
-
-    <h2 class="bg-reading-heading">
-        How AquaCast Works
-    </h2>
-
-
-    <div class="bg-workflow">
-
-        <div class="bg-workflow-card">
-
-            <div class="bg-workflow-number">
-                1
-            </div>
-
-            <strong>
-                Environmental Data
-            </strong>
-
-            <span>
-                Rainfall, temperature,
-                recent weather patterns,
-                and historical bacterial monitoring.
-            </span>
-
-        </div>
-
-
-        <div class="bg-workflow-arrow">
-            →
-        </div>
-
-
-        <div class="bg-workflow-card">
-
-            <div class="bg-workflow-number">
-                2
-            </div>
-
-            <strong>
-                AquaCast Model
-            </strong>
-
-            <span>
-                Machine-learning models evaluate
-                environmental conditions associated
-                with bacterial exceedances.
-            </span>
-
-        </div>
-
-
-        <div class="bg-workflow-arrow">
-            →
-        </div>
-
-
-        <div class="bg-workflow-card">
-
-            <div class="bg-workflow-number">
-                3
-            </div>
-
-            <strong>
-                Risk Forecast
-            </strong>
-
-            <span>
-                BeachGuard converts model probabilities
-                into Safe, Caution, or Unsafe
-                decision-support categories.
-            </span>
-
-        </div>
-
-    </div>
-
-
-    <section class="bg-reading-section">
-
-        <h2>
-            What AquaCast Predicts
-        </h2>
-
-        <p>
-            AquaCast estimates the probability that
-            E. coli or Enterococcus will exceed an
-            elevated-risk concentration threshold at
-            Parkside Aquatic Park, San Mateo.
-        </p>
-
-        <p>
-            AquaCast performs classification rather than
-            attempting to predict an exact bacterial
-            concentration. Laboratory sampling is still
-            required to directly measure bacteria levels.
-        </p>
-
-    </section>
-
-
-    <section class="bg-reading-section">
-
-        <h2>
-            Model Development
-        </h2>
-
-        <p>
-            AquaCast was developed using historical
-            recreational-water monitoring and environmental
-            data. The model pipeline uses chronological
-            training, validation, and test periods so that
-            earlier observations are used to predict later
-            conditions rather than randomly mixing past
-            and future data.
-        </p>
-
-        <p>
-            Current live forecasts extend the research
-            prototype by incorporating recent and forecast
-            weather while retaining the existing AquaCast
-            model structure.
-        </p>
-
-    </section>
-
-
-    <h2 class="bg-reading-heading">
-        Data Sources
-    </h2>
-
-
-    <div class="bg-source-grid">
-
-        <a
-            class="bg-source-card"
-            href="https://www.waterboards.ca.gov/"
-            target="_blank"
-        >
-
-            <span class="bg-source-label">
-                Monitoring Data
-            </span>
-
-            <strong>
-                California Water Boards
-            </strong>
-
-            <p>
-                Historical fecal-indicator bacteria
-                monitoring records.
-            </p>
-
-        </a>
-
-
-        <a
-            class="bg-source-card"
-            href="https://www.ncei.noaa.gov/"
-            target="_blank"
-        >
-
-            <span class="bg-source-label">
-                Historical Weather
-            </span>
-
-            <strong>
-                NOAA / NCEI
-            </strong>
-
-            <p>
-                Historical precipitation and
-                temperature observations.
-            </p>
-
-        </a>
-
-
-        <a
-            class="bg-source-card"
-            href="https://open-meteo.com/"
-            target="_blank"
-        >
-
-            <span class="bg-source-label">
-                Live Forecast Weather
-            </span>
-
-            <strong>
-                Open-Meteo
-            </strong>
-
-            <p>
-                Recent and forecast environmental
-                conditions used by the live support layer.
-            </p>
-
-        </a>
-
-    </div>
-
-
-    <section class="bg-reading-section">
-
-        <h2>
-            Why E. coli and Enterococcus?
-        </h2>
-
-        <p>
-            E. coli and Enterococcus are fecal-indicator
-            bacteria commonly used to evaluate recreational
-            water quality. Elevated indicator levels can
-            be associated with increased risk of illness
-            from water contact.
-        </p>
-
-    </section>
-
-
-    <section class="bg-reading-section">
-
-        <h2>
-            Development Transparency
-        </h2>
-
-        <p>
-            AI-assisted tools were used for limited
-            code support, debugging, review, and
-            documentation. The project developer remains
-            responsible for understanding, testing,
-            editing, and maintaining the submitted code.
-        </p>
-
-    </section>
+    <h3 style="
+        color:#172033;
+        margin-top:0.5rem;
+    ">
+        Observe conditions
+    </h3>
+
+    <p style="
+        color:#667085;
+        font-size:0.82rem;
+        line-height:1.5;
+    ">
+        AquaCast uses recent and forecast environmental
+        information such as rainfall and temperature.
+    </p>
 
 </div>
 """
+    )
+
+
+with step2:
+
+    st.html(
+        """
+<div style="
+    background:#FFFFFF;
+    border:1px solid #E4E7EC;
+    border-radius:14px;
+    padding:1.1rem;
+    min-height:175px;
+">
+
+    <div style="
+        color:#0F6B78;
+        font-weight:800;
+        font-size:0.75rem;
+    ">
+        2 · AQUACAST MODEL
+    </div>
+
+    <h3 style="
+        color:#172033;
+        margin-top:0.5rem;
+    ">
+        Estimate probability
+    </h3>
+
+    <p style="
+        color:#667085;
+        font-size:0.82rem;
+        line-height:1.5;
+    ">
+        Separate machine-learning models estimate
+        the probability of elevated E. coli and
+        Enterococcus concentrations.
+    </p>
+
+</div>
+"""
+    )
+
+
+with step3:
+
+    st.html(
+        """
+<div style="
+    background:#FFFFFF;
+    border:1px solid #E4E7EC;
+    border-radius:14px;
+    padding:1.1rem;
+    min-height:175px;
+">
+
+    <div style="
+        color:#0F6B78;
+        font-weight:800;
+        font-size:0.75rem;
+    ">
+        3 · RISK FORECAST
+    </div>
+
+    <h3 style="
+        color:#172033;
+        margin-top:0.5rem;
+    ">
+        Communicate risk
+    </h3>
+
+    <p style="
+        color:#667085;
+        font-size:0.82rem;
+        line-height:1.5;
+    ">
+        BeachGuard translates the probabilities
+        into Safe, Caution, and Unsafe model
+        classifications for easier interpretation.
+    </p>
+
+</div>
+"""
+    )
+
+
+# ==========================================================
+# TERMS
+# ==========================================================
+
+st.subheader(
+    "Quick definitions"
 )
+
+
+with st.expander(
+    "Fecal indicator bacteria"
+):
+
+    st.write(
+        "Bacteria such as E. coli and Enterococcus are used "
+        "as indicators of possible fecal contamination. "
+        "They are monitored because elevated concentrations "
+        "can indicate increased health risk in recreational water."
+    )
+
+
+with st.expander(
+    "Exceedance probability"
+):
+
+    st.write(
+        "The probability that the model assigns to bacterial "
+        "concentrations exceeding the concentration threshold "
+        "used by AquaCast. A probability is not the same thing "
+        "as a measured bacteria concentration."
+    )
+
+
+with st.expander(
+    "Chronological validation"
+):
+
+    st.write(
+        "The model was trained on earlier observations and "
+        "evaluated on later observations. This better reflects "
+        "the real forecasting task than randomly mixing older "
+        "and newer dates."
+    )
+
+
+# ==========================================================
+# PILOT SCOPE
+# ==========================================================
+
+st.subheader(
+    "Current pilot"
+)
+
+
+st.write(
+    f"AquaCast is currently demonstrated at {SITE_NAME}. "
+    "The project is intended as a research prototype and "
+    "a framework that could be evaluated at additional "
+    "recreational-water sites in the future."
+)
+
+
+# ==========================================================
+# LINKS
+# ==========================================================
+
+col1, col2 = st.columns(
+    2
+)
+
+
+with col1:
+
+    st.link_button(
+        "View Project on GitHub",
+        GITHUB_URL,
+        use_container_width=True,
+    )
+
+
+with col2:
+
+    st.link_button(
+        "Official San Mateo County Beach Status",
+        OFFICIAL_URL,
+        use_container_width=True,
+    )
 
 
 render_footer()
