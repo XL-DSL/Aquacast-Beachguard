@@ -110,7 +110,7 @@ navigation = st.navigation(
 
 
 navigation.run()
-)
+
 
 apply_styles()
 
