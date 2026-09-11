@@ -1,14 +1,8 @@
-import streamlit as st
-
-
-# ==========================================================
-# APP CONFIGURATION
-# ==========================================================
 import pandas as pd
 import streamlit as st
 
 from utils.live_forecast import load_live_latest
-from utils.styles import apply_styles, load_latest
+from utils.styles import apply_styles
 from utils.ui import (
     OFFICIAL_URL,
     SITE_NAME,
@@ -18,99 +12,14 @@ from utils.ui import (
     render_footer,
     risk_class,
     risk_icon,
+    risk_driver_text,
+    successful_generation_text,
+)
+from utils.validation import (
+    load_valid_latest,
+    validate_prediction_row,
 )
 
-
-st.set_page_config(
-    page_title="BeachGuard | AquaCast Water Quality Forecast",
-    page_icon="🌊",
-    layout="wide",
-    initial_sidebar_state="expanded",
-)
-
-
-# ==========================================================
-# PAGE DEFINITIONS
-# ==========================================================
-
-current_forecast = st.Page(
-    "pages/0_Current_Forecast.py",
-    title="Current Forecast",
-    default=True,
-)
-
-timeline = st.Page(
-    "pages/8_Timeline.py",
-    title="Timeline",
-)
-
-recent_trends = st.Page(
-    "pages/4_Recent_Trends.py",
-    title="Recent Trends",
-)
-
-map_page = st.Page(
-    "pages/5_Map.py",
-    title="Map",
-)
-
-risk_details = st.Page(
-    "pages/1_Risk_Details.py",
-    title="Risk Details",
-)
-
-about = st.Page(
-    "pages/2_About.py",
-    title="About AquaCast",
-)
-
-safety = st.Page(
-    "pages/3_Disclaimer.py",
-    title="Safety & Data Notes",
-)
-
-limitations = st.Page(
-    "pages/7_Limitations.py",
-    title="Limitations",
-)
-
-model_data = st.Page(
-    "pages/6_Model_and_Data.py",
-    title="Model & Data",
-)
-
-
-# ==========================================================
-# SIDEBAR NAVIGATION
-# ==========================================================
-
-navigation = st.navigation(
-    {
-        "🌊 BeachGuard": [
-            current_forecast,
-            timeline,
-            recent_trends,
-            map_page,
-            risk_details,
-        ],
-
-        "About & Safety": [
-            about,
-            safety,
-        ],
-
-        "Technical": [
-            limitations,
-            model_data,
-        ],
-    },
-    position="sidebar",
-    expanded=True,
-)
-
-
-navigation.run()
-)
 
 apply_styles()
 
@@ -118,6 +27,13 @@ apply_styles()
 SITE_LAT = 37.5602
 SITE_LON = -122.2910
 
+
+# ==========================================================
+# LOAD CURRENT PREDICTION
+# Try live forecast first.
+# If live forecasting fails, use the latest validated saved
+# prediction instead.
+# ==========================================================
 
 live_prediction = True
 live_error = None
@@ -130,7 +46,7 @@ except Exception as exc:
     live_error = exc
 
     try:
-        latest = load_latest()
+        latest = load_valid_latest()
 
     except Exception:
         st.html(
@@ -146,9 +62,9 @@ except Exception as exc:
     </h2>
 
     <p>
-        AquaCast cannot retrieve the latest forecast
+        AquaCast cannot retrieve a valid forecast
         right now. Please check the official
-        San Mateo County advisory.
+        San Mateo County water-quality advisory.
     </p>
 
     <a
@@ -156,7 +72,7 @@ except Exception as exc:
         href="{OFFICIAL_URL}"
         target="_blank"
     >
-        Check Official Advisories
+        View Official San Mateo County Beach Status
     </a>
 
 </div>
@@ -165,6 +81,40 @@ except Exception as exc:
 
         st.stop()
 
+
+# ==========================================================
+# VALIDATE PREDICTION BEFORE DISPLAYING IT
+# ==========================================================
+
+validation = validate_prediction_row(
+    latest
+)
+
+if not validation["valid"]:
+    st.error(
+        "Prediction currently unavailable. "
+        "The latest forecast did not pass "
+        "data validation."
+    )
+
+    st.link_button(
+        "View Official San Mateo County Beach Status",
+        OFFICIAL_URL,
+    )
+
+    st.stop()
+
+
+if validation["stale"]:
+    st.warning(
+        "This prediction is more than 7 days old "
+        "and may no longer represent current conditions."
+    )
+
+
+# ==========================================================
+# PREPARE DISPLAY VALUES
+# ==========================================================
 
 prediction_date = pd.to_datetime(
     latest["prediction_date"],
@@ -237,9 +187,28 @@ freshness = freshness_chip(
 source_text = (
     "Live weather-based AquaCast forecast"
     if live_prediction
-    else "Latest saved AquaCast forecast"
+    else "Latest validated saved AquaCast forecast"
 )
 
+
+# ==========================================================
+# RISK DRIVER + SUCCESSFUL GENERATION TIME
+# ==========================================================
+
+driver_text = risk_driver_text(
+    ecoli_risk,
+    entero_risk,
+)
+
+generated_text = successful_generation_text(
+    latest,
+    using_live=live_prediction,
+)
+
+
+# ==========================================================
+# HERO / CURRENT FORECAST
+# ==========================================================
 
 st.html(
     f"""
@@ -252,11 +221,13 @@ st.html(
         </div>
 
         <div class="bg-home-meta">
+
             <span>
                 Forecast for {prediction_text}
             </span>
 
             {freshness}
+
         </div>
 
         <div class="bg-home-status">
@@ -284,7 +255,7 @@ st.html(
             href="{OFFICIAL_URL}"
             target="_blank"
         >
-            Check Official Water-Quality Advisories
+            View Official San Mateo County Beach Status
         </a>
 
     </section>
@@ -294,6 +265,33 @@ st.html(
 )
 
 
+# ==========================================================
+# RISK DRIVER + FORECAST GENERATION TIME
+# ==========================================================
+
+st.html(
+    f"""
+<div class="bg-forecast-context">
+
+    <div class="bg-risk-driver">
+        {driver_text}
+    </div>
+
+    <div class="bg-generated-time">
+        Last successfully generated:
+        <strong>{generated_text}</strong>
+    </div>
+
+</div>
+"""
+)
+
+
+# ==========================================================
+# FALLBACK NOTICE
+# Only appears when the live forecast failed.
+# ==========================================================
+
 if not live_prediction:
     st.html(
         """
@@ -301,13 +299,18 @@ if not live_prediction:
 
     <div class="bg-inline-notice">
         Live weather input is temporarily unavailable.
-        Showing the latest saved AquaCast prediction.
+        Showing the latest validated saved
+        AquaCast prediction.
     </div>
 
 </div>
 """
     )
 
+
+# ==========================================================
+# BACTERIA PROBABILITY METERS
+# ==========================================================
 
 ecoli_meter = probability_meter(
     ecoli_prob,
@@ -324,6 +327,10 @@ entero_meter = probability_meter(
 )
 
 
+# ==========================================================
+# WATER QUALITY RISK CARDS
+# ==========================================================
+
 st.html(
     f"""
 <div class="bg-home-shell">
@@ -331,6 +338,7 @@ st.html(
     <div class="bg-section-title-row">
 
         <div>
+
             <h2 class="bg-section-title">
                 Water Quality Risk
             </h2>
@@ -340,6 +348,7 @@ st.html(
                 levels exceed the model's
                 elevated-risk concentration threshold.
             </p>
+
         </div>
 
     </div>
@@ -435,6 +444,10 @@ st.html(
 )
 
 
+# ==========================================================
+# PILOT SITE
+# ==========================================================
+
 st.html(
     f"""
 <div class="bg-home-shell">
@@ -461,6 +474,10 @@ st.html(
 """
 )
 
+
+# ==========================================================
+# MAP
+# ==========================================================
 
 map_left, map_center, map_right = st.columns(
     [1, 10, 1]
@@ -493,14 +510,12 @@ with map_center:
         )
 
         with map_col1:
-
             st.caption(
                 f"📍 {SITE_NAME} · "
                 f"{source_text}"
             )
 
         with map_col2:
-
             st.link_button(
                 "Open larger map",
                 (
@@ -512,22 +527,35 @@ with map_center:
             )
 
 
+# ==========================================================
+# SAFETY NOTICE
+# ==========================================================
+
 st.html(
     """
 <div class="bg-home-shell">
 
     <div class="bg-support-note">
-        <strong>Important:</strong>
+
+        <strong>
+            Important:
+        </strong>
+
         BeachGuard is an experimental decision-support
         forecast. It does not directly measure bacteria
         and does not replace official laboratory results,
         advisories, or closures.
+
     </div>
 
 </div>
 """
 )
 
+
+# ==========================================================
+# FOOTER
+# ==========================================================
 
 render_footer(
     model_ver
