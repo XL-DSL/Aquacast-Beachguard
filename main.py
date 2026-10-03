@@ -23,44 +23,52 @@ current_forecast = st.Page(
     default=True,
 )
 
+
 timeline = st.Page(
     "pages/8_Timeline.py",
     title="Timeline",
 )
+
 
 recent_trends = st.Page(
     "pages/4_Recent_Trends.py",
     title="Recent Trends",
 )
 
+
 map_page = st.Page(
     "pages/5_Map.py",
     title="Map",
 )
+
 
 risk_details = st.Page(
     "pages/1_Risk_Details.py",
     title="Risk Details",
 )
 
+
 about = st.Page(
     "pages/2_About.py",
     title="About AquaCast",
 )
+
 
 safety = st.Page(
     "pages/3_Disclaimer.py",
     title="Safety & Data Notes",
 )
 
-limitations = st.Page(
-    "pages/7_Limitations.py",
-    title="Limitations",
-)
 
 model_data = st.Page(
     "pages/6_Model_and_Data.py",
     title="Model & Data",
+)
+
+
+limitations = st.Page(
+    "pages/7_Limitations.py",
+    title="Limitations",
 )
 
 
@@ -84,8 +92,8 @@ navigation = st.navigation(
         ],
 
         "Technical": [
-            limitations,
             model_data,
+            limitations,
         ],
     },
     position="sidebar",
