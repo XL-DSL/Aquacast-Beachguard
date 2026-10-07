@@ -256,7 +256,7 @@ st.html(
 st.link_button(
     "View Official San Mateo County Beach Status",
     OFFICIAL_URL,
-    use_container_width=True,
+    width="stretch",
 )
 
 
