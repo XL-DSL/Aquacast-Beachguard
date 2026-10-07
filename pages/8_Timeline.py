@@ -734,7 +734,7 @@ def show_day_details(
     st.link_button(
         "View Official San Mateo County Beach Status",
         OFFICIAL_URL,
-        use_container_width=True,
+        width="stretch",
     )
 
 
@@ -788,7 +788,7 @@ except Exception:
     st.link_button(
         "View Official San Mateo County Beach Status",
         OFFICIAL_URL,
-        use_container_width=True,
+        width="stretch",
     )
 
     st.stop()
@@ -1480,7 +1480,7 @@ with st.expander(
     st.dataframe(
         display,
         hide_index=True,
-        use_container_width=True,
+        width="stretch",
     )
 
 
