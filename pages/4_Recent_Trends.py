@@ -88,7 +88,7 @@ except Exception:
     st.link_button(
         "View Official San Mateo County Beach Status",
         OFFICIAL_URL,
-        use_container_width=True,
+        width="stretch",
     )
 
     st.stop()
@@ -597,7 +597,7 @@ def organism_chart(
         chart.properties(
             height=280
         ).interactive(),
-        use_container_width=True,
+        width="stretch",
     )
 
 
@@ -773,7 +773,7 @@ with st.expander(
     st.dataframe(
         display.iloc[::-1],
         hide_index=True,
-        use_container_width=True,
+        width="stretch",
     )
 
 
