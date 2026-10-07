@@ -52,7 +52,7 @@ except Exception:
         st.link_button(
             "View Official San Mateo County Beach Status",
             OFFICIAL_URL,
-            use_container_width=True,
+            width="stretch",
         )
 
         st.stop()
@@ -344,7 +344,7 @@ deck = pdk.Deck(
 
 st.pydeck_chart(
     deck,
-    use_container_width=True,
+    width="stretch",
 )
 
 
@@ -366,7 +366,7 @@ with button1:
             "?api=1&destination="
             f"{SITE_LAT},{SITE_LON}"
         ),
-        use_container_width=True,
+        width="stretch",
     )
 
 
@@ -379,7 +379,7 @@ with button2:
             "?api=1&query="
             f"{SITE_LAT},{SITE_LON}"
         ),
-        use_container_width=True,
+        width="stretch",
     )
 
 
@@ -411,7 +411,7 @@ st.warning(
 st.link_button(
     "View Official San Mateo County Beach Status",
     OFFICIAL_URL,
-    use_container_width=True,
+    width="stretch",
 )
 
 
