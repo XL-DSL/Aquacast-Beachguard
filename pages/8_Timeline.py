@@ -15,12 +15,6 @@ from utils.ui import (
 )
 
 
-st.set_page_config(
-    page_title="Timeline | BeachGuard",
-    page_icon="🌊",
-    layout="wide",
-)
-
 apply_styles()
 
 
@@ -59,22 +53,19 @@ st.html(
 
 .timeline-section-header h2 {
     margin: 0 !important;
-
     color: #172033;
-
     font-size: 1.15rem;
     font-weight: 800;
 }
 
 .timeline-section-header span {
     color: #98A2B3;
-
     font-size: 0.75rem;
 }
 
 
 /* ----------------------------------------------------------
-   SMALL DAY TILE CONTENT
+   DAY TILE
    ---------------------------------------------------------- */
 
 .timeline-tile {
@@ -150,11 +141,6 @@ st.html(
     font-weight: 800;
 }
 
-
-/* ----------------------------------------------------------
-   FUTURE HORIZON
-   ---------------------------------------------------------- */
-
 .timeline-horizon {
     color: #98A2B3;
 
@@ -165,7 +151,7 @@ st.html(
 
 
 /* ----------------------------------------------------------
-   TODAY HERO
+   TODAY
    ---------------------------------------------------------- */
 
 .timeline-today {
@@ -187,7 +173,7 @@ st.html(
 
     padding: 1.35rem 1.5rem;
 
-    margin-bottom: 1rem;
+    margin-bottom: 0.8rem;
 
     box-shadow:
         0 4px 16px rgba(15, 107, 120, 0.10);
@@ -276,90 +262,133 @@ st.html(
 
 
 /* ----------------------------------------------------------
-   SELECTED DAY DETAILS
+   POPUP DETAILS
    ---------------------------------------------------------- */
 
-.timeline-detail {
+.popup-summary {
     background: #FFFFFF;
 
     border: 1px solid #E4E7EC;
 
-    border-radius: 16px;
+    border-radius: 14px;
 
-    padding: 1.3rem 1.4rem;
-
-    margin-top: 1.5rem;
-    margin-bottom: 1.3rem;
-
-    box-shadow:
-        0 1px 5px rgba(16, 24, 40, 0.05);
-}
-
-.timeline-detail-header {
-    display: flex;
-
-    justify-content: space-between;
-    align-items: flex-start;
-
-    gap: 1rem;
+    padding: 1rem 1.1rem;
 
     margin-bottom: 1rem;
 }
 
-.timeline-detail-period {
+.popup-period {
     color: #98A2B3;
 
     font-size: 0.68rem;
-    font-weight: 700;
+    font-weight: 750;
 
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
 
-.timeline-detail-date {
+.popup-date {
     color: #172033;
 
-    margin-top: 0.15rem;
+    font-size: 1.15rem;
+    font-weight: 800;
 
-    font-size: 1.2rem;
+    margin-top: 0.2rem;
+}
+
+.popup-overall {
+    margin-top: 0.55rem;
+
+    font-size: 1.35rem;
     font-weight: 800;
 }
 
-.timeline-detail-risk {
-    font-size: 1.2rem;
-    font-weight: 800;
-}
-
-.timeline-detail-risk.safe {
+.popup-overall.safe {
     color: #2E7D32;
 }
 
-.timeline-detail-risk.caution {
+.popup-overall.caution {
     color: #B26A00;
 }
 
-.timeline-detail-risk.unsafe {
+.popup-overall.unsafe {
     color: #C62828;
 }
 
-.timeline-detail-driver {
-    background: #F2F4F7;
+.popup-driver {
+    margin-top: 0.75rem;
+
+    background: #F8FAFC;
+
+    color: #475467;
 
     border-radius: 10px;
 
-    padding: 0.7rem 0.85rem;
-
-    margin-top: 0.8rem;
-
-    color: #475467;
+    padding: 0.7rem 0.8rem;
 
     font-size: 0.8rem;
     line-height: 1.45;
 }
 
+.popup-bacteria-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 0.8rem;
+
+    margin-bottom: 1rem;
+}
+
+.popup-bacteria-card {
+    background: #F8FAFC;
+
+    border: 1px solid #EAECF0;
+
+    border-radius: 12px;
+
+    padding: 0.9rem 1rem;
+}
+
+.popup-bacteria-name {
+    color: #667085;
+
+    font-size: 0.75rem;
+    font-weight: 650;
+}
+
+.popup-bacteria-value {
+    color: #172033;
+
+    font-size: 1.7rem;
+    font-weight: 800;
+
+    margin-top: 0.2rem;
+}
+
+.popup-bacteria-risk {
+    font-size: 0.72rem;
+    font-weight: 750;
+
+    margin-top: 0.1rem;
+}
+
+.popup-bacteria-risk.safe {
+    color: #2E7D32;
+}
+
+.popup-bacteria-risk.caution {
+    color: #B26A00;
+}
+
+.popup-bacteria-risk.unsafe {
+    color: #C62828;
+}
+
 
 /* ----------------------------------------------------------
-   TIMELINE VIEW BUTTONS
+   VIEW BUTTONS
    ---------------------------------------------------------- */
 
 div[data-testid="stButton"] > button {
@@ -380,9 +409,6 @@ div[data-testid="stButton"] > button {
     box-shadow: none !important;
 }
 
-
-/* Make all text/icons inside the button visible */
-
 div[data-testid="stButton"] > button *,
 div[data-testid="stButton"] > button p,
 div[data-testid="stButton"] > button span {
@@ -390,16 +416,11 @@ div[data-testid="stButton"] > button span {
     opacity: 1 !important;
 }
 
-
-/* Hover */
-
 div[data-testid="stButton"] > button:hover {
     background: #F0F7F8 !important;
     color: #0F6B78 !important;
-
     border-color: #0F6B78 !important;
 }
-
 
 div[data-testid="stButton"] > button:hover *,
 div[data-testid="stButton"] > button:hover p,
@@ -407,22 +428,6 @@ div[data-testid="stButton"] > button:hover span {
     color: #0F6B78 !important;
 }
 
-
-/* Click / focus */
-
-div[data-testid="stButton"] > button:focus,
-div[data-testid="stButton"] > button:active {
-    background: #E6F4F5 !important;
-    color: #0F6B78 !important;
-
-    border-color: #0F6B78 !important;
-}
-
-
-div[data-testid="stButton"] > button:focus *,
-div[data-testid="stButton"] > button:active * {
-    color: #0F6B78 !important;
-}
 
 /* ----------------------------------------------------------
    FUTURE WARNING
@@ -459,12 +464,12 @@ div[data-testid="stButton"] > button:active * {
         padding: 1.1rem;
     }
 
-    .timeline-detail-header {
-        flex-direction: column;
-    }
-
     .timeline-tile {
         min-height: auto;
+    }
+
+    .popup-bacteria-grid {
+        grid-template-columns: 1fr;
     }
 
 }
@@ -485,7 +490,9 @@ RISK_RANK = {
 }
 
 
-def risk_badge_html(risk):
+def risk_badge_html(
+    risk
+):
     css_class = risk_class(
         risk
     )
@@ -511,42 +518,223 @@ def risk_driver(
         0,
     )
 
+
     if ecoli_rank > entero_rank:
+
         return (
-            "Overall risk is currently driven "
-            "by the E. coli prediction."
+            "Overall risk is driven by "
+            "the E. coli prediction."
         )
+
 
     if entero_rank > ecoli_rank:
+
         return (
-            "Overall risk is currently driven "
-            "by the Enterococcus prediction."
+            "Overall risk is driven by "
+            "the Enterococcus prediction."
         )
+
 
     if ecoli_rank == 0:
+
         return (
-            "Both bacteria are currently "
-            "classified as Safe."
+            "Both bacteria are classified as Safe."
         )
 
+
     return (
-        "Both bacteria are currently at the "
-        f"{ecoli_risk} risk level."
+        "Both bacteria are classified "
+        f"as {ecoli_risk}."
     )
 
 
-def set_selected_day(
-    prediction_date
+# ==========================================================
+# POPUP / MODAL
+# ==========================================================
+
+@st.dialog(
+    "AquaCast Day Details",
+    width="large",
+)
+def show_day_details(
+    row_dict,
+    period,
+    today,
 ):
-    st.session_state[
-        "timeline_selected_date"
-    ] = (
-        pd.Timestamp(
-            prediction_date
+    row = pd.Series(
+        row_dict
+    )
+
+
+    selected_date = pd.to_datetime(
+        row[
+            "prediction_date"
+        ]
+    )
+
+
+    overall = str(
+        row[
+            "overall_risk"
+        ]
+    ).strip()
+
+
+    ecoli_risk = str(
+        row[
+            "e_coli_risk"
+        ]
+    ).strip()
+
+
+    entero_risk = str(
+        row[
+            "enterococcus_risk"
+        ]
+    ).strip()
+
+
+    ecoli_probability = float(
+        row[
+            "e_coli_probability"
+        ]
+    )
+
+
+    entero_probability = float(
+        row[
+            "enterococcus_probability"
+        ]
+    )
+
+
+    if period == "past":
+
+        period_text = (
+            "Reconstructed Recent Estimate"
         )
-        .strftime(
-            "%Y-%m-%d"
+
+
+    elif period == "today":
+
+        period_text = (
+            "Current Forecast"
         )
+
+
+    else:
+
+        horizon = (
+            selected_date.normalize()
+            - pd.Timestamp(
+                today
+            ).normalize()
+        ).days
+
+        period_text = (
+            f"Future Forecast · "
+            f"{horizon} day"
+            f"{'s' if horizon != 1 else ''} ahead"
+        )
+
+
+    st.html(
+        f"""
+<div class="popup-summary">
+
+    <div class="popup-period">
+        {period_text}
+    </div>
+
+    <div class="popup-date">
+        {selected_date.strftime("%A, %B %d, %Y")}
+    </div>
+
+    <div class="popup-overall {risk_class(overall)}">
+        {risk_icon(overall)}
+        {overall}
+    </div>
+
+    <div class="popup-driver">
+        {risk_driver(
+            ecoli_risk,
+            entero_risk
+        )}
+    </div>
+
+</div>
+
+
+<div class="popup-bacteria-grid">
+
+    <div class="popup-bacteria-card">
+
+        <div class="popup-bacteria-name">
+            E. coli
+        </div>
+
+        <div class="popup-bacteria-value">
+            {ecoli_probability:.1%}
+        </div>
+
+        <div class="popup-bacteria-risk {risk_class(ecoli_risk)}">
+            {ecoli_risk}
+        </div>
+
+    </div>
+
+
+    <div class="popup-bacteria-card">
+
+        <div class="popup-bacteria-name">
+            Enterococcus
+        </div>
+
+        <div class="popup-bacteria-value">
+            {entero_probability:.1%}
+        </div>
+
+        <div class="popup-bacteria-risk {risk_class(entero_risk)}">
+            {entero_risk}
+        </div>
+
+    </div>
+
+</div>
+"""
+    )
+
+
+    if period == "past":
+
+        st.caption(
+            "This value is a reconstructed AquaCast model "
+            "estimate, not a laboratory measurement or a "
+            "forecast that was necessarily saved on that date."
+        )
+
+
+    elif period == "future":
+
+        horizon = (
+            selected_date.normalize()
+            - pd.Timestamp(
+                today
+            ).normalize()
+        ).days
+
+        st.caption(
+            f"This forecast is {horizon} "
+            f"day{'s' if horizon != 1 else ''} ahead. "
+            "Forecast uncertainty generally increases "
+            "farther from today."
+        )
+
+
+    st.link_button(
+        "View Official San Mateo County Beach Status",
+        OFFICIAL_URL,
+        use_container_width=True,
     )
 
 
@@ -558,12 +746,15 @@ st.title(
     "15-Day AquaCast Timeline"
 )
 
+
 st.html(
     f"""
 <div class="timeline-page-intro">
+
     Seven reconstructed recent model estimates,
     today's current forecast, and seven future forecasts
     for <strong>{SITE_NAME}</strong>.
+
 </div>
 """
 )
@@ -574,6 +765,7 @@ st.html(
 # ==========================================================
 
 try:
+
     with st.spinner(
         "Building AquaCast timeline..."
     ):
@@ -586,11 +778,11 @@ try:
             days=8
         )
 
+
 except Exception:
 
     st.error(
-        "The AquaCast timeline is "
-        "temporarily unavailable."
+        "The AquaCast timeline is temporarily unavailable."
     )
 
     st.link_button(
@@ -603,7 +795,7 @@ except Exception:
 
 
 # ==========================================================
-# CLEAN DATA
+# CLEAN DATES
 # ==========================================================
 
 recent = recent.copy()
@@ -657,7 +849,6 @@ today = (
 
 # ==========================================================
 # PREVIOUS 7 DAYS
-# Reconstructed model estimates, NOT saved historical forecasts.
 # ==========================================================
 
 past = (
@@ -685,7 +876,6 @@ past[
 
 # ==========================================================
 # TODAY
-# Use current live forecast so this matches Current Forecast.
 # ==========================================================
 
 current = (
@@ -753,87 +943,21 @@ future[
 
 
 # ==========================================================
-# ALL 15 DAYS
-# ==========================================================
-
-timeline = pd.concat(
-    [
-        past,
-        current,
-        future,
-    ],
-    ignore_index=True,
-    sort=False,
-)
-
-
-timeline = (
-    timeline
-    .sort_values(
-        "prediction_date"
-    )
-    .reset_index(
-        drop=True
-    )
-)
-
-
-if timeline.empty:
-    st.error(
-        "No timeline data are currently available."
-    )
-
-    st.stop()
-
-
-# ==========================================================
-# DEFAULT SELECTION = TODAY
-# ==========================================================
-
-today_key = today.strftime(
-    "%Y-%m-%d"
-)
-
-
-if (
-    "timeline_selected_date"
-    not in st.session_state
-):
-    st.session_state[
-        "timeline_selected_date"
-    ] = today_key
-
-
-valid_keys = set(
-    timeline[
-        "prediction_date"
-    ]
-    .dt.strftime(
-        "%Y-%m-%d"
-    )
-)
-
-
-if (
-    st.session_state[
-        "timeline_selected_date"
-    ]
-    not in valid_keys
-):
-    st.session_state[
-        "timeline_selected_date"
-    ] = today_key
-
-
-# ==========================================================
 # PREVIOUS 7 DAYS
 # ==========================================================
 
 st.html(
     """
 <div class="timeline-section-header">
-    <h2>Previous 7 Days</h2>
-    <span>Reconstructed model estimates</span>
+
+    <h2>
+        Previous 7 Days
+    </h2>
+
+    <span>
+        Reconstructed model estimates
+    </span>
+
 </div>
 """
 )
@@ -841,7 +965,9 @@ st.html(
 
 past_columns = st.columns(
     max(
-        len(past),
+        len(
+            past
+        ),
         1,
     )
 )
@@ -860,17 +986,20 @@ for column, (_, row) in zip(
             ]
         )
 
+
         overall = str(
             row[
                 "overall_risk"
             ]
         ).strip()
 
+
         ecoli_probability = float(
             row[
                 "e_coli_probability"
             ]
         )
+
 
         entero_probability = float(
             row[
@@ -901,12 +1030,16 @@ for column, (_, row) in zip(
 
         <div>
             E. coli
-            <strong>{ecoli_probability:.0%}</strong>
+            <strong>
+                {ecoli_probability:.0%}
+            </strong>
         </div>
 
         <div>
-            Entero
-            <strong>{entero_probability:.0%}</strong>
+            Enterococcus
+            <strong>
+                {entero_probability:.0%}
+            </strong>
         </div>
 
     </div>
@@ -914,6 +1047,7 @@ for column, (_, row) in zip(
 </div>
 """
             )
+
 
             if st.button(
                 "View",
@@ -924,8 +1058,11 @@ for column, (_, row) in zip(
                     )
                 ),
             ):
-                set_selected_day(
-                    date_value
+
+                show_day_details(
+                    row.to_dict(),
+                    "past",
+                    today,
                 )
 
 
@@ -936,8 +1073,15 @@ for column, (_, row) in zip(
 st.html(
     """
 <div class="timeline-section-header">
-    <h2>Today</h2>
-    <span>Current AquaCast forecast</span>
+
+    <h2>
+        Today
+    </h2>
+
+    <span>
+        Current AquaCast forecast
+    </span>
+
 </div>
 """
 )
@@ -945,7 +1089,12 @@ st.html(
 
 if not current.empty:
 
-    today_row = current.iloc[0]
+    today_row = (
+        current.iloc[
+            0
+        ]
+    )
+
 
     current_overall = str(
         today_row[
@@ -953,11 +1102,13 @@ if not current.empty:
         ]
     ).strip()
 
+
     current_ecoli_risk = str(
         today_row[
             "e_coli_risk"
         ]
     ).strip()
+
 
     current_entero_risk = str(
         today_row[
@@ -965,17 +1116,20 @@ if not current.empty:
         ]
     ).strip()
 
+
     current_ecoli = float(
         today_row[
             "e_coli_probability"
         ]
     )
 
+
     current_entero = float(
         today_row[
             "enterococcus_probability"
         ]
     )
+
 
     current_class = risk_class(
         current_overall
@@ -1054,8 +1208,11 @@ if not current.empty:
         "View today's full details",
         key="today_details",
     ):
-        set_selected_day(
-            today
+
+        show_day_details(
+            today_row.to_dict(),
+            "today",
+            today,
         )
 
 
@@ -1066,8 +1223,15 @@ if not current.empty:
 st.html(
     """
 <div class="timeline-section-header">
-    <h2>Next 7 Days</h2>
-    <span>Forecast uncertainty increases with horizon</span>
+
+    <h2>
+        Next 7 Days
+    </h2>
+
+    <span>
+        Forecast uncertainty increases with horizon
+    </span>
+
 </div>
 """
 )
@@ -1075,7 +1239,9 @@ st.html(
 
 future_columns = st.columns(
     max(
-        len(future),
+        len(
+            future
+        ),
         1,
     )
 )
@@ -1094,11 +1260,13 @@ for column, (_, row) in zip(
             ]
         )
 
+
         overall = str(
             row[
                 "overall_risk"
             ]
         ).strip()
+
 
         ecoli_probability = float(
             row[
@@ -1106,11 +1274,13 @@ for column, (_, row) in zip(
             ]
         )
 
+
         entero_probability = float(
             row[
                 "enterococcus_probability"
             ]
         )
+
 
         horizon = (
             date_value.normalize()
@@ -1140,23 +1310,30 @@ for column, (_, row) in zip(
 
         <div>
             E. coli
-            <strong>{ecoli_probability:.0%}</strong>
+            <strong>
+                {ecoli_probability:.0%}
+            </strong>
         </div>
 
         <div>
-            Entero
-            <strong>{entero_probability:.0%}</strong>
+            Enterococcus
+            <strong>
+                {entero_probability:.0%}
+            </strong>
         </div>
 
     </div>
 
     <div class="timeline-horizon">
-        {horizon} day{"s" if horizon != 1 else ""} ahead
+        {horizon}
+        day{"s" if horizon != 1 else ""}
+        ahead
     </div>
 
 </div>
 """
             )
+
 
             if st.button(
                 "View",
@@ -1167,194 +1344,49 @@ for column, (_, row) in zip(
                     )
                 ),
             ):
-                set_selected_day(
-                    date_value
+
+                show_day_details(
+                    row.to_dict(),
+                    "future",
+                    today,
                 )
 
+
+# ==========================================================
+# FUTURE UNCERTAINTY
+# ==========================================================
 
 st.html(
     """
 <div class="timeline-future-note">
-    <strong>Future forecast:</strong>
+
+    <strong>
+        Future forecast:
+    </strong>
+
     uncertainty increases farther from today because
     future rainfall, temperature, and other environmental
     conditions are themselves forecasted.
+
 </div>
 """
 )
 
 
 # ==========================================================
-# SELECTED DAY DETAILS
+# FULL TABLE
 # ==========================================================
 
-selected_key = st.session_state[
-    "timeline_selected_date"
-]
+timeline = pd.concat(
+    [
+        past,
+        current,
+        future,
+    ],
+    ignore_index=True,
+    sort=False,
+)
 
-
-selected_rows = timeline[
-    timeline[
-        "prediction_date"
-    ]
-    .dt.strftime(
-        "%Y-%m-%d"
-    )
-    == selected_key
-]
-
-
-if not selected_rows.empty:
-
-    selected = selected_rows.iloc[0]
-
-    selected_date = pd.to_datetime(
-        selected[
-            "prediction_date"
-        ]
-    )
-
-    selected_period = str(
-        selected[
-            "period"
-        ]
-    )
-
-    selected_overall = str(
-        selected[
-            "overall_risk"
-        ]
-    ).strip()
-
-    selected_ecoli_risk = str(
-        selected[
-            "e_coli_risk"
-        ]
-    ).strip()
-
-    selected_entero_risk = str(
-        selected[
-            "enterococcus_risk"
-        ]
-    ).strip()
-
-    selected_ecoli = float(
-        selected[
-            "e_coli_probability"
-        ]
-    )
-
-    selected_entero = float(
-        selected[
-            "enterococcus_probability"
-        ]
-    )
-
-
-    if selected_period == "past":
-        period_text = (
-            "Reconstructed Recent Estimate"
-        )
-
-    elif selected_period == "today":
-        period_text = (
-            "Current Forecast"
-        )
-
-    else:
-        horizon = (
-            selected_date.normalize()
-            - today
-        ).days
-
-        period_text = (
-            f"Future Forecast · "
-            f"{horizon} day"
-            f"{'s' if horizon != 1 else ''} ahead"
-        )
-
-
-    st.html(
-        """
-<div class="timeline-section-header">
-    <h2>Selected Day</h2>
-    <span>Full bacteria-specific breakdown</span>
-</div>
-"""
-    )
-
-
-    st.html(
-        f"""
-<div class="timeline-detail">
-
-    <div class="timeline-detail-header">
-
-        <div>
-
-            <div class="timeline-detail-period">
-                {period_text}
-            </div>
-
-            <div class="timeline-detail-date">
-                {selected_date.strftime("%A, %B %d, %Y")}
-            </div>
-
-        </div>
-
-        <div class="timeline-detail-risk {risk_class(selected_overall)}">
-            {risk_icon(selected_overall)}
-            {selected_overall}
-        </div>
-
-    </div>
-
-    <div class="timeline-detail-driver">
-        {risk_driver(
-            selected_ecoli_risk,
-            selected_entero_risk,
-        )}
-    </div>
-
-</div>
-"""
-    )
-
-
-    detail_col1, detail_col2 = st.columns(
-        2
-    )
-
-
-    with detail_col1:
-
-        st.metric(
-            "E. coli Probability",
-            f"{selected_ecoli:.1%}",
-        )
-
-        st.caption(
-            f"Risk classification: "
-            f"{selected_ecoli_risk}"
-        )
-
-
-    with detail_col2:
-
-        st.metric(
-            "Enterococcus Probability",
-            f"{selected_entero:.1%}",
-        )
-
-        st.caption(
-            f"Risk classification: "
-            f"{selected_entero_risk}"
-        )
-
-
-# ==========================================================
-# DETAILED TABLE
-# ==========================================================
 
 with st.expander(
     "View all 15 daily values"
@@ -1376,9 +1408,11 @@ with st.expander(
     display[
         "prediction_date"
     ] = (
-        display[
-            "prediction_date"
-        ]
+        pd.to_datetime(
+            display[
+                "prediction_date"
+            ]
+        )
         .dt.strftime(
             "%a, %b %d"
         )
@@ -1451,40 +1485,6 @@ with st.expander(
 
 
 # ==========================================================
-# SAFETY NOTE
-# ==========================================================
-
-st.html(
-    """
-<div style="
-    background:#FFF8CC;
-    color:#5C4A00;
-    border:1px solid #F1E59A;
-    border-radius:12px;
-    padding:0.85rem 1rem;
-    margin-top:1.3rem;
-    margin-bottom:1rem;
-    font-size:0.82rem;
-    line-height:1.5;
-">
-    <strong>Experimental model estimates.</strong>
-    Previous-day values shown here are reconstructed
-    AquaCast estimates rather than laboratory measurements
-    or forecasts saved on those dates. Future forecast
-    uncertainty increases with forecast horizon.
-</div>
-"""
-)
-
-
-st.link_button(
-    "View Official San Mateo County Beach Status",
-    OFFICIAL_URL,
-    use_container_width=True,
-)
-
-
-# ==========================================================
 # FOOTER
 # ==========================================================
 
@@ -1496,8 +1496,11 @@ if (
     and "model_version"
     in current.columns
 ):
+
     model_version = str(
-        current.iloc[0][
+        current.iloc[
+            0
+        ][
             "model_version"
         ]
     )
