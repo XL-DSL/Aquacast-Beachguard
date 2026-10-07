@@ -260,7 +260,7 @@ with col1:
     st.link_button(
         "View Project on GitHub",
         GITHUB_URL,
-        use_container_width=True,
+        width="stretch",
     )
 
 
@@ -269,7 +269,7 @@ with col2:
     st.link_button(
         "Official San Mateo County Beach Status",
         OFFICIAL_URL,
-        use_container_width=True,
+        width="stretch",
     )
 
 
