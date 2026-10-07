@@ -481,7 +481,7 @@ threshold_table = pd.DataFrame(
 st.dataframe(
     threshold_table,
     hide_index=True,
-    use_container_width=True,
+    width="stretch",
 )
 
 
@@ -542,7 +542,7 @@ features = pd.DataFrame(
 st.dataframe(
     features,
     hide_index=True,
-    use_container_width=True,
+    width="stretch",
 )
 
 
@@ -653,7 +653,7 @@ performance = pd.DataFrame(
 st.dataframe(
     performance,
     hide_index=True,
-    use_container_width=True,
+    width="stretch",
 )
 
 
@@ -726,7 +726,7 @@ with source1:
     st.link_button(
         "California Water Boards / SWAMP",
         "https://www.waterboards.ca.gov/water_issues/programs/swamp/",
-        use_container_width=True,
+        width="stretch",
     )
 
 
@@ -735,7 +735,7 @@ with source2:
     st.link_button(
         "NOAA NCEI",
         "https://www.ncei.noaa.gov/",
-        use_container_width=True,
+        width="stretch",
     )
 
 
@@ -749,7 +749,7 @@ with source3:
     st.link_button(
         "Open-Meteo",
         "https://open-meteo.com/",
-        use_container_width=True,
+        width="stretch",
     )
 
 
@@ -758,7 +758,7 @@ with source4:
     st.link_button(
         "Project Repository / Methodology",
         GITHUB_URL,
-        use_container_width=True,
+        width="stretch",
     )
 
 
