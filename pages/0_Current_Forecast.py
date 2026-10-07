@@ -523,7 +523,7 @@ with map_center:
                     "?api=1&query="
                     f"{SITE_LAT},{SITE_LON}"
                 ),
-                use_container_width=True,
+                width="stretch",
             )
 
 
