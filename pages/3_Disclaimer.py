@@ -57,7 +57,7 @@ st.html(
 st.link_button(
     "View Official San Mateo County Beach Status",
     OFFICIAL_URL,
-    use_container_width=True,
+    width="stretch",
 )
 
 
@@ -104,7 +104,7 @@ with source1:
     st.link_button(
         "California Water Boards / SWAMP",
         "https://www.waterboards.ca.gov/water_issues/programs/swamp/",
-        use_container_width=True,
+        width="stretch",
     )
 
 
@@ -113,7 +113,7 @@ with source2:
     st.link_button(
         "NOAA NCEI Daily Summaries",
         "https://www.ncei.noaa.gov/access/search/data-search/daily-summaries",
-        use_container_width=True,
+        width="stretch",
     )
 
 
@@ -127,7 +127,7 @@ with source3:
     st.link_button(
         "Open-Meteo Forecast Weather",
         "https://open-meteo.com/",
-        use_container_width=True,
+        width="stretch",
     )
 
 
@@ -136,7 +136,7 @@ with source4:
     st.link_button(
         "San Mateo County Beach Information",
         OFFICIAL_URL,
-        use_container_width=True,
+        width="stretch",
     )
 
 
