@@ -13,11 +13,7 @@ import streamlit as st
 # Beach Data Map for the most recent recreational-water
 # sampling information.
 OFFICIAL_URL = (
-    "https://www.google.com/maps/d/viewer"
-    "?femb=1"
-    "&ll=37.41494222054769,-122.38601015000002"
-    "&mid=1Y0U-5M0-ej_PnH8i1mJYFaXBlok-8fE"
-    "&z=10"
+    "https://www.google.com/maps/d/u/0/viewer?femb=1&ll=37.5615491815124%2C-122.28861964163302&mid=1Y0U-5M0-ej_PnH8i1mJYFaXBlok-8fE&z=16"
 )
 
 GITHUB_URL = (
